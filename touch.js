@@ -86,7 +86,7 @@
 
           this.target = evt.target;
           this.timestamp = evt.timeStamp;
-          evt.target.setCapture(false);
+//          evt.target.setCapture(false);
 
           preventMouseEvents = false;
           canPreventMouseEvents = true;
@@ -214,8 +214,8 @@
       return timeout;
     },
     sendTouchEvent: function teh_sendTouchEvent(evt, target, name) {
-      let touchEvent = document.createEvent('touchevent');
-      let point = document.createTouch(window, target, 0,
+      let touchEvent = document.createEvent('CustomEvent');
+/*      let point = document.createTouch(window, target, 0,
                                      evt.pageX, evt.pageY,
                                      evt.screenX, evt.screenY,
                                      evt.clientX, evt.clientY,
@@ -226,14 +226,16 @@
       touchEvent.initTouchEvent(name, true, true, window, 0,
                                 false, false, false, false,
                                 touches, targetTouches, changedTouches);
+*/
+      touchEvent.initCustomEvent(name, true, true, { target: target });
       target.dispatchEvent(touchEvent);
       return touchEvent;
     }
   };
 
-  window.addEventListener('ContentStart', function touchStart(evt) {
-    window.removeEventListener('ContentStart', touchStart);
+//  window.addEventListener('ContentStart', function touchStart(evt) {
+//    window.removeEventListener('ContentStart', touchStart);
     TouchEventHandler.start();
-  });
+//  });
 })();
 
