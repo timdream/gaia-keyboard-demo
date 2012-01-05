@@ -70,6 +70,7 @@ window.navigator.mozKeyboard = new MozKeyboard();
 // Init
 
 var textarea;
+var lock = false;
 
 window.onload = function () {
   Gaia.AppManager.foregroundWindow =
@@ -78,6 +79,24 @@ window.onload = function () {
   textarea.onfocus = function () {
     shell.sendEvent('showime', {type: 'text'});
   };
+
+  console.log(window.parent.document.getElementsByClassName('lock')[0]);
+
+  window.parent.document.getElementsByClassName('lock')[0].addEventListener(
+    'click',
+    function (ev) {
+      ev.preventDefault();
+      lock = !lock;
+      if (lock) {
+        this.classList.add('on');
+        textarea.focus();
+      } else {
+        this.classList.remove('on');
+        shell.sendEvent('hideime');
+      }
+    }
+  );
+
   setTimeout(
     function () {
       textarea.focus();
@@ -87,6 +106,7 @@ window.onload = function () {
 };
 
 window.onblur = function () {
-  shell.sendEvent('hideime');
+  if (!lock)
+    shell.sendEvent('hideime');
 };
 
