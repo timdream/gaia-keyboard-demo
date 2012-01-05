@@ -35,18 +35,19 @@ var utils = {
     // XXX: this does not respect the position of the cursor
 
     if (keyCode === 8) {
-      $('textarea')[0].value = $('textarea')[0].value.substr(0, $('textarea')[0].value.length - 1);
+      textarea.value = textarea.value.substr(0, textarea.value.length - 1);
       return;
     }
 
-    $('textarea')[0].value += String.fromCharCode(charCode);
+    textarea.value += String.fromCharCode(charCode);
   }
 }
 
 // Gaia
 
 var Gaia = {
-  AppManager: {}
+  AppManager: {
+  }
 };
 
 // MozKeyboard
@@ -66,21 +67,26 @@ MozKeyboard.prototype = {
 
 window.navigator.mozKeyboard = new MozKeyboard();
 
-jQuery(function ($) {
-  var $textarea = $('textarea');
-  var textarea = $textarea[0];
+// Init
 
-  Gaia.AppManager.foregroundWindow = textarea;
+var textarea;
 
-  $textarea.on(
-    'focus',
-    function (ev) {
-      shell.sendEvent('showime', {type: 'text'});
-    }
-  ).on(
-    'blur',
-    function (ev) {
-      shell.sendEvent('hideime');
-    }
+window.onload = function () {
+  Gaia.AppManager.foregroundWindow =
+    textarea =
+    document.getElementsByTagName('textarea')[0];
+  textarea.onfocus = function () {
+    shell.sendEvent('showime', {type: 'text'});
+  };
+  setTimeout(
+    function () {
+      textarea.focus();
+    },
+    700
   );
-});
+};
+
+window.onblur = function () {
+  shell.sendEvent('hideime');
+};
+
