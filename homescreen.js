@@ -29,9 +29,17 @@ var utils = {
                         keyCode, charCode);
     window.dispatchEvent(event);
 
-    if (type == 'keypress') {
-      $('textarea')[0].value += String.fromCharCode(charCode);
+    if (type !== 'keypress')
+      return;
+
+    // XXX: this does not respect the position of the cursor
+
+    if (keyCode === 8) {
+      $('textarea')[0].value = $('textarea')[0].value.substr(0, $('textarea')[0].value.length - 1);
+      return;
     }
+
+    $('textarea')[0].value += String.fromCharCode(charCode);
   }
 }
 
