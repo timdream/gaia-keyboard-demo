@@ -18,10 +18,61 @@
   }
   body {
     background-color: #000;
+    color: #fff;
+    font: 20px sans-serif;
+  }
+  a {
+    color: #ddf;
+  }
+
+  a.about {
+    position: absolute;
+    right: 50px;
+    bottom: 50px;
+    text-decoration: none;
+    border: 1px solid #fff;
+    border-radius: 5px;
+    padding: 10px;
+  }
+
+  a.close {
+    float: right;
+    text-decoration: none;
+    border: 1px solid #fff;
+    border-radius: 5px;
+    padding: 10px;
+  }
+
+  #about {
+    display: none;
+  }
+
+  #about:target {
+    display: block;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 480px;
+    height: 500px;
+    margin-top: -250px;
+    margin-left: -240px;
+    background-color: rgba(0,0,0,0.8);
+    color: #fff;
+    -moz-box-sizing: border-box;
+    padding: 30px;
   }
   </style>
 </head>
 <body>
 <iframe src="./homescreen.html"></iframe>
+<p><a class="about" href="#about">About</a></p>
+<div id="about">
+  <h1>Gaia is a HTML5-based Phone UI for the Boot 2 Gecko Project</h1>
+  <p>This is the keyboard and IME lives in Gaia.</p>
+  <p>Due to usage of Mozilla specific JavaScript 1.8 syntax and IndexedDB API,
+this demo can only be run in <a href="http://nightly.mozilla.org/" target="_blank">Nightly</a> or <a href="http://www.mozilla.org/en-US/firefox/channel/" target="_blank">Aurora</a> version of Firefox.</p>
+  <p><a href="https://wiki.mozilla.org/B2G" target="_blank">Understanding more about B2G & Gaia</a>.</p>
+  <p><a class="close" href="#">Close</a></p>
+</div>
 </body>
 </html>
