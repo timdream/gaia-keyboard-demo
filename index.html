@@ -35,6 +35,20 @@
     padding: 10px;
   }
 
+  a.lock {
+    position: absolute;
+    left: 50px;
+    bottom: 50px;
+    text-decoration: none;
+    border: 1px solid #fff;
+    border-radius: 5px;
+    padding: 10px;
+  }
+  a.lock.on {
+    background-color: #ccc;
+    color: #000;
+  }
+
   a.close {
     float: right;
     text-decoration: none;
@@ -65,6 +79,7 @@
 </head>
 <body>
 <iframe src="./homescreen.html"></iframe>
+<p><a class="lock" href="#">Keep on</a></p>
 <p><a class="about" href="#about">About</a></p>
 <div id="about">
   <h1>Gaia is a HTML5-based Phone UI for the Boot 2 Gecko Project</h1>
