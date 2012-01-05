@@ -80,8 +80,6 @@ window.onload = function () {
     shell.sendEvent('showime', {type: 'text'});
   };
 
-  console.log(window.parent.document.getElementsByClassName('lock')[0]);
-
   window.parent.document.getElementsByClassName('lock')[0].addEventListener(
     'click',
     function (ev) {
