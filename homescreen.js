@@ -50,6 +50,27 @@ var Gaia = {
   }
 };
 
+// MozSettings shim; always return true
+
+if (!window.navigator.mozSettings) {
+  window.navigator.mozSettings = {};
+  window.navigator.mozSettings.get = function () {
+    var evt = {};
+    var request = {
+      result: {
+        value: true,
+      },
+      addEventListener: function (type, callback) {
+        setTimeout(function () {
+          callback(evt)
+        },
+        0);
+      }
+    };
+    return request;
+  };
+}
+
 // MozKeyboard
 
 function MozKeyboard() {
