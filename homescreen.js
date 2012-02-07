@@ -41,7 +41,7 @@ var utils = {
 
     textarea.value += String.fromCharCode(charCode);
   }
-}
+};
 
 // Gaia
 
@@ -54,15 +54,21 @@ var Gaia = {
 
 if (!window.navigator.mozSettings) {
   window.navigator.mozSettings = {};
-  window.navigator.mozSettings.get = function () {
+  window.navigator.mozSettings.get = function() {
     var evt = {};
     var request = {
       result: {
-        value: true,
+        value: 'true'
       },
-      addEventListener: function (type, callback) {
-        setTimeout(function () {
-          callback(evt)
+      addEventListener: function(type, callback) {
+        setTimeout(function() {
+          callback(evt);
+        },
+        0);
+      },
+      set onsuccess(callback) {
+        setTimeout(function() {
+          callback(evt);
         },
         0);
       }
@@ -93,17 +99,17 @@ window.navigator.mozKeyboard = new MozKeyboard();
 var textarea;
 var lock = false;
 
-window.onload = function () {
+window.onload = function() {
   Gaia.AppManager.foregroundWindow =
     textarea =
     document.getElementsByTagName('textarea')[0];
-  textarea.onfocus = function () {
+  textarea.onfocus = function() {
     shell.sendEvent('showime', {type: 'text'});
   };
 
   window.parent.document.getElementsByClassName('lock')[0].addEventListener(
     'click',
-    function (ev) {
+    function(ev) {
       ev.preventDefault();
       lock = !lock;
       if (lock) {
@@ -117,14 +123,14 @@ window.onload = function () {
   );
 
   setTimeout(
-    function () {
+    function() {
       textarea.focus();
     },
     700
   );
 };
 
-window.onblur = function () {
+window.onblur = function() {
   if (!lock)
     shell.sendEvent('hideime');
 };
