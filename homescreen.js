@@ -122,6 +122,27 @@ window.onload = function() {
     }
   );
 
+  window.parent.document.getElementsByClassName('hori')[0].addEventListener(
+    'click',
+    function(ev) {
+      ev.preventDefault();
+      if (!this.classList.contains('on')) {
+        this.classList.add('on');
+        window.parent.document.getElementsByTagName('iframe')[0].classList.add('hori');
+      } else {
+        this.classList.remove('on');
+        window.parent.document.getElementsByTagName('iframe')[0].classList.remove('hori');
+      }
+    }
+  );
+
+  window.parent.document.getElementsByTagName('iframe')[0].addEventListener(
+    'transitionend',
+    function(ev) {
+      textarea.focus();
+    }
+  );
+
   setTimeout(
     function() {
       textarea.focus();
