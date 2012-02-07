@@ -15,6 +15,13 @@
     margin-left: -240px;
     border: none;
     background-color: #222;
+    -moz-transition: all ease 0.5s;
+  }
+  iframe.hori {
+    width: 800px;
+    height: 480px;
+    margin-top: -250px;
+    margin-left: -400px;
   }
   body {
     background-color: #000;
@@ -45,6 +52,20 @@
     padding: 10px;
   }
   a.lock.on {
+    background-color: #ccc;
+    color: #000;
+  }
+
+  a.hori {
+    position: absolute;
+    left: 150px;
+    bottom: 50px;
+    text-decoration: none;
+    border: 1px solid #fff;
+    border-radius: 5px;
+    padding: 10px;
+  }
+  a.hori.on {
     background-color: #ccc;
     color: #000;
   }
@@ -80,6 +101,7 @@
 <body>
 <iframe src="./homescreen.html"></iframe>
 <p><a class="lock" href="#">Keep on</a></p>
+<p><a class="hori" href="#">Horizontal</a></p>
 <p><a class="about" href="#about">About</a></p>
 <div id="about">
   <h1>Gaia is a HTML5-based Phone UI for the Boot 2 Gecko Project</h1>
