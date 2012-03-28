@@ -77,6 +77,16 @@ if (!window.navigator.mozSettings) {
   };
 }
 
+// SettingsListener shim; always return true
+
+var SettingsListener = {
+  observe: function (key, defalut, callback) {
+    setTimeout(function () {
+      callback('true')
+    }, 0);
+  }
+};
+
 // MozKeyboard
 
 function MozKeyboard() {
