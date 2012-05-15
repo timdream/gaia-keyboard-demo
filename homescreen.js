@@ -43,10 +43,13 @@ var utils = {
   }
 };
 
-// Gaia
+// WindowManager
 
-var Gaia = {
-  AppManager: {
+var WindowManager = {
+  getAppFrame: function () {
+    return this._frame;
+  },
+  getDisplayedApp: function () {
   }
 };
 
@@ -110,7 +113,7 @@ var textarea;
 var lock = false;
 
 window.onload = function() {
-  Gaia.AppManager.foregroundWindow =
+  WindowManager._frame =
     textarea =
     document.getElementsByTagName('textarea')[0];
   textarea.onfocus = function() {
