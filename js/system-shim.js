@@ -1,6 +1,6 @@
 if (
   window.location.protocol === 'file:' || // xhr is prevented by security rule in file:
-  !window.mozIndexedDB || // No mozIndexedDB API implementation
+  (!window.indexedDB && !window.mozIndexedDB) || // No mozIndexedDB API implementation
   IDBDatabase.prototype.setVersion // old version of IndexedDB API
 ) {
   alert('Your browser is not capable of running this B2G demo.'
