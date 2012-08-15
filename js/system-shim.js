@@ -47,6 +47,12 @@ window.navigator.mozKeyboard = {
       return;
     }
 
+    if (keyCode == 13) {
+      app.value += '\n';
+      return;
+    }
+
+
     app.value += String.fromCharCode(charCode);
   },
   onfocuschange: function () { }
