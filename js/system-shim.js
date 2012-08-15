@@ -1,6 +1,6 @@
 if (
   window.location.protocol === 'file:' || // xhr is prevented by security rule in file:
-  !window.mozIndexedDB || // No mozIndexedDB API implementation
+  (!window.indexedDB && !window.mozIndexedDB) || // No mozIndexedDB API implementation
   IDBDatabase.prototype.setVersion // old version of IndexedDB API
 ) {
   alert('Your browser is not capable of running this B2G demo.'
@@ -46,6 +46,12 @@ window.navigator.mozKeyboard = {
       app.value = app.value.substr(0, app.value.length - 1);
       return;
     }
+
+    if (keyCode == 13) {
+      app.value += '\n';
+      return;
+    }
+
 
     app.value += String.fromCharCode(charCode);
   },
