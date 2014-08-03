@@ -1,0 +1,63 @@
+@media screen and (min-width: 768px) {
+  body {
+    padding: 70px 0;
+  }
+
+  *[hidden] {
+    display: none;
+  }
+
+  #inputarea {
+    min-height: 8em;
+  }
+
+  .navbar select {
+    display: none;
+  }
+}
+
+@media (max-width: 767px) {
+  body > .container {
+    margin: 10px 5px 70px;
+  }
+
+  #inputarea {
+    min-height: 3em;
+  }
+
+  .navbar .nav, .navbar .navbar-brand {
+    display: none;
+  }
+
+  .navbar select {
+    margin: 10px 0;
+    display: block;
+  }
+}
+
+#keyboard-app-container {
+  width: 100%;
+  height: 40vh;
+
+  border: none;
+}
+
+body.distraction-free > .container > *:not(#inputarea):not(#panel),
+body.distraction-free > *:not(.container) {
+  opacity: 0;
+  -webkit-transition: opacity 3s ease;
+  -ms-transition: opacity 3s ease;
+  transition: opacity 3s ease;
+}
+
+body > .container > *:not(#inputarea):not(#panel),
+body > *:not(.container) {
+  -webkit-transition: opacity 1s ease;
+  -ms-transition: opacity 1s ease;
+  transition: opacity 1s ease;
+}
+
+#inputarea {
+  font-size: 140%;
+  outline: none;
+}
