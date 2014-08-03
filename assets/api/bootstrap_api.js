@@ -1,8 +1,19 @@
 'use strict';
 
-navigator.mozSettings = new NavigatorMozSettings();
-navigator.mozInputMethod = new InputMethod(new InputContext());
+(function(exports) {
 
-window.resizeTo = function() {
-  console.log(arguments);
+navigator.mozSettings = new NavigatorMozSettings();
+
+var inputcontext = new InputContext();
+inputcontext.start();
+
+navigator.mozInputMethod = new InputMethod(inputcontext);
+
+window.resizeTo = function(width, height) {
+  window.parent.postMessage({
+    api: 'resizeTo',
+    args: [width, height]
+  } , '*');
 };
+
+}(window));

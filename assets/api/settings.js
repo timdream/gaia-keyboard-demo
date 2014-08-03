@@ -29,6 +29,7 @@ NavigatorMozSettings.prototype.onsettingchange = null;
 // stub this method and return your own lock with spy/stub methods.
 NavigatorMozSettings.prototype.createLock = function() {
   var lock = new NavigatorMozSettingsLock();
+  lock.start();
 
   return lock;
 };
@@ -67,24 +68,75 @@ NavigatorMozSettings.prototype.dispatchSettingChange = function(key, val) {
 
 var NavigatorMozSettingsLock = function() {
   this.closed = false;
+
+  this._lockId = '';
+  this._pendingRequestId = 0;
+  this._pendingRequests = null;
+};
+
+NavigatorMozSettingsLock.prototype.start = function() {
+  this._lockId = Math.random().toString(32).substr(2, 8);
+  this._pendingRequestId = 0;
+  this._pendingRequests = new Map();
+};
+
+NavigatorMozSettingsLock.prototype.stop = function() {
+  window.removeEventListener('message', this);
+
+  this._lockId = '';
+  this._pendingRequestId = 0;
+  this._pendingRequests = null;
+};
+
+NavigatorMozSettingsLock.prototype.handleEvent = function(evt) {
+  var data = evt.data;
+
+  if (data.api !== 'settings' || data.lockId !== this._lockId) {
+    return;
+  }
+
+  var req = this._pendingRequests.get(data.id);
+  this._pendingRequests.delete(data.id);
+
+  if (this._pendingRequests.size === 0) {
+    window.removeEventListener('message', this);
+  }
+
+  if (typeof data.result !== 'undefined') {
+    req.fireSuccess(data.result);
+  } else {
+    req.fireError(data.error);
+  }
+};
+
+NavigatorMozSettingsLock.prototype._sendMessage = function(method, args) {
+  var req = new MockDOMRequest();
+
+  var requestId = ++this._pendingRequestId;
+  this._pendingRequests.set(requestId, req);
+
+  window.addEventListener('message', this);
+  window.parent.postMessage({
+    id: requestId,
+    api: 'settings',
+    lockId: this._lockId,
+    method: method,
+    args: args
+  } , '*');
+
+  return req;
 };
 
 NavigatorMozSettingsLock.prototype.set = function(arg) {
-  var req = new MockDOMRequest();
-
-  return req;
+  return this._sendMessage('set', [arg]);
 };
 
 NavigatorMozSettingsLock.prototype.get = function(arg) {
-  var req = new MockDOMRequest();
-
-  return req;
+  return this._sendMessage('get', [arg]);
 };
 
 NavigatorMozSettingsLock.prototype.clear = function(arg) {
-  var req = new MockDOMRequest();
-
-  return req;
+  return this._sendMessage('clear', [arg]);
 };
 
 exports.NavigatorMozSettings = NavigatorMozSettings;

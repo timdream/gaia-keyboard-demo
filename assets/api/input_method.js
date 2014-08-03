@@ -74,6 +74,9 @@
    *
    */
   var InputContext = function InputContext() {
+    this._contextId = '';
+    this._pendingPromisesId = 0;
+    this._pendingPromises = null;
   };
 
   InputContext.prototype = new MockEventTarget();
@@ -91,6 +94,66 @@
   InputContext.prototype.onsurroundingtextchange = null;
 
   InputContext.prototype.onselectionchange = null;
+
+  InputContext.prototype.start = function () {
+    this._contextId = Math.random().toString(32).substr(2, 8);
+    this._pendingPromisesId = 0;
+    this._pendingPromises = new Map();
+
+    window.addEventListener('message', this);
+  };
+
+  InputContext.prototype.stop = function() {
+    window.removeEventListener('message', this);
+
+    this._contextId = '';
+    this._pendingPromisesId = 0;
+    this._pendingPromises = null;
+  };
+
+  InputContext.prototype.handleEvent = function(evt) {
+    var data = evt.data;
+
+    if (data.api !== 'inputcontext' || data.contextId !== this._contextId) {
+      return;
+    }
+
+    var p = this._pendingPromises.get(data.id);
+    this._pendingPromises.delete(data.id);
+
+    if (typeof data.result !== 'undefined') {
+      p._resolve(data.result);
+    } else {
+      p._reject(data.error);
+    }
+  };
+
+  InputContext.prototype._sendMessage = function(method, args) {
+    var oResolve, oReject;
+    // We are using the native Promise here but expose
+    // the reject method and a resolve method.
+    // See http://mdn.io/promise
+    var p = new Promise(function(resolve, reject) {
+      oResolve = resolve;
+      oReject = reject;
+    });
+    p._resolve = oResolve;
+    p._reject = oReject;
+
+    var promiseId = ++this._pendingPromisesId;
+    this._pendingPromises.set(promiseId, p);
+
+    window.addEventListener('message', this);
+    window.parent.postMessage({
+      id: promiseId,
+      api: 'inputcontext',
+      contextId: this._contextId,
+      method: method,
+      args: args
+    } , '*');
+
+    return p;
+  };
 
   InputContext.prototype.fireSurroundingTextChange = function() {
     var evt = {
@@ -116,25 +179,26 @@
     this.dispatchEvent(evt);
   };
 
-  InputContext.prototype.getText =
-  InputContext.prototype.setSelectionRange =
-  InputContext.prototype.replaceSurroundingText =
-  InputContext.prototype.deleteSurroundingText =
-  InputContext.prototype.sendKey =
-  InputContext.prototype.setComposition =
-  InputContext.prototype.endComposition = function sendPromise() {
-    var oResolve, oReject;
-    // We are using the native Promise here but expose
-    // the reject method and a resolve method.
-    // See http://mdn.io/promise
-    var p = new Promise(function(resolve, reject) {
-      oResolve = resolve;
-      oReject = reject;
-    });
-    p.resolve = oResolve;
-    p.reject = oReject;
-
-    return p;
+  InputContext.prototype.getText = function() {
+    return this._sendMessage('getText');
+  };
+  InputContext.prototype.setSelectionRange = function() {
+    return this._sendMessage('setSelectionRange', arguments);
+  };
+  InputContext.prototype.replaceSurroundingText = function() {
+    return this._sendMessage('replaceSurroundingText', arguments);
+  };
+  InputContext.prototype.deleteSurroundingText = function() {
+    return this._sendMessage('deleteSurroundingText', arguments);
+  };
+  InputContext.prototype.sendKey = function() {
+    return this._sendMessage('sendKey', arguments);
+  };
+  InputContext.prototype.setComposition = function() {
+    return this._sendMessage('setComposition', arguments);
+  };
+  InputContext.prototype.endComposition = function() {
+    return this._sendMessage('endComposition', arguments);
   };
 
   /**

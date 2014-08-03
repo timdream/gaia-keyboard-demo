@@ -1,13 +1,15 @@
 'use strict';
 
-var KeyboardDemo = function() {
+(function(exports) {
+
+var KeyboardDemoApp = function() {
   this.container = null;
 };
 
-KeyboardDemo.prototype.GAIA_APP_DIR = './gaia/apps/keyboard';
-KeyboardDemo.prototype.CONTAINER_ID = 'keyboard-app-container';
+KeyboardDemoApp.prototype.GAIA_APP_DIR = './gaia/apps/keyboard';
+KeyboardDemoApp.prototype.CONTAINER_ID = 'keyboard-app-container';
 
-KeyboardDemo.prototype.start = function() {
+KeyboardDemoApp.prototype.start = function() {
   if (typeof window.Promise !== 'function') {
     window.Promise = window.Q;
   }
@@ -21,9 +23,46 @@ KeyboardDemo.prototype.start = function() {
   .then(this._prepareDOM.bind(this)).catch(function(e) {
     console.error(e);
   });
+
+  this.settingsHandler = new SettingsHandler(this);
+  this.settingsHandler.start();
+
+  this.inputMethodHandler = new InputMethodHandler(this);
+  this.inputMethodHandler.start();
+
+  window.addEventListener('message', this);
 };
 
-KeyboardDemo.prototype._loadBasePage = function() {
+KeyboardDemoApp.prototype.postMessage = function(data) {
+  this.container.contentWindow.postMessage(data, '*');
+};
+
+KeyboardDemoApp.prototype.handleEvent = function(evt) {
+  var data = evt.data;
+  switch (data.api) {
+    case 'settings':
+      this.settingsHandler.handleMessage(data);
+
+      break;
+
+    case 'inputcontext':
+      this.inputMethodHandler.handleMessage(data);
+
+      break;
+
+    case 'resizeTo':
+      this.container.style.height = data.args[1] + 'px';
+
+      break;
+
+    default:
+      throw new Error('KeyboardDemoApp: Unknown message.');
+
+      break;
+  }
+};
+
+KeyboardDemoApp.prototype._loadBasePage = function() {
   return new Promise(function(resolve, reject) {
     this.container.onload =
     this.container.onerror = function() {
@@ -34,7 +73,7 @@ KeyboardDemo.prototype._loadBasePage = function() {
   }.bind(this));
 };
 
-KeyboardDemo.prototype._getIndexHTMLContent = function() {
+KeyboardDemoApp.prototype._getIndexHTMLContent = function() {
   return new Promise(function(resolve, reject) {
     var xhr = new XMLHttpRequest();
     xhr.open('GET', this.GAIA_APP_DIR + '/index.html');
@@ -49,7 +88,7 @@ KeyboardDemo.prototype._getIndexHTMLContent = function() {
   }.bind(this));
 };
 
-KeyboardDemo.prototype._prepareDOM = function(values) {
+KeyboardDemoApp.prototype._prepareDOM = function(values) {
   var destDoc = this.container.contentWindow.document;
   // Clean up the document.
   destDoc.documentElement.innerHTML = '';
@@ -92,9 +131,8 @@ KeyboardDemo.prototype._prepareDOM = function(values) {
     // clone the node so we don't mess with the original collection list.
     destDoc.body.appendChild(node.cloneNode(true));
   });
-
-  this.container.hidden = false;
 };
 
-var demo = new KeyboardDemo();
-demo.start();
+exports.KeyboardDemoApp = KeyboardDemoApp;
+
+}(window));
