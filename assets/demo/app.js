@@ -96,8 +96,18 @@ KeyboardDemoApp.prototype._prepareDOM = function(values) {
   var destHeadNode = destDoc.documentElement.firstElementChild;
 
   // Inject a few scripts to create fake APIs.
+  ['//cdnjs.cloudflare.com/ajax/libs/es6-shim/0.11.0/es6-shim.min.js',
+   '//cdnjs.cloudflare.com/ajax/libs/q.js/1.0.1/q.min.js']
+  .forEach(function(src) {
+    var el = destDoc.createElement('script');
+    el.src = src;
+    el.async = false;
+    destHeadNode.appendChild(el);
+  });
+
   var PARENT_DIR = this.GAIA_APP_DIR.replace(/[^\/\.]+/g, '..') + '/';
-  ['assets/api/event_target.js',
+  ['assets/api/keyboard_event.js',
+   'assets/api/event_target.js',
    'assets/api/dom_request.js',
    'assets/api/settings.js',
    'assets/api/input_method.js',

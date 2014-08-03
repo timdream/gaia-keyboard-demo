@@ -16,4 +16,12 @@ window.resizeTo = function(width, height) {
   } , '*');
 };
 
+if (!('vibrate' in navigator)) {
+  navigator.vibrate = function() { };
+};
+
+if (!exports.WeakMap) {
+  exports.WeakMap = exports.Map;
+}
+
 }(window));
