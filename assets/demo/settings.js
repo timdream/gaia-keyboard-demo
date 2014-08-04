@@ -19,7 +19,8 @@ SettingsHandler.prototype.start = function() {
 SettingsHandler.prototype.handleMessage = function(data) {
   switch (data.method) {
     case 'get':
-      var result = this.settings.get(data.args[0]);
+      var result = {};
+      result[data.args[0]] = this.settings.get(data.args[0]);
       this.app.postMessage({
         api: data.api,
         lockId: data.lockId,
