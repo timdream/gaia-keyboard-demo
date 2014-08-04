@@ -32,7 +32,7 @@ InputMethodHandler.prototype.handleMessage = function(data) {
     case 'endComposition':
       this.app.postMessage({
         api: data.api,
-        lockId: data.lockId,
+        contextId: data.contextId,
         id: data.id,
         error: 'Unimplemented'
       });

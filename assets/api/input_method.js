@@ -183,22 +183,28 @@
     return this._sendMessage('getText');
   };
   InputContext.prototype.setSelectionRange = function() {
-    return this._sendMessage('setSelectionRange', arguments);
+    return this._sendMessage(
+      'setSelectionRange', [].slice.call(arguments));
   };
   InputContext.prototype.replaceSurroundingText = function() {
-    return this._sendMessage('replaceSurroundingText', arguments);
+    return this._sendMessage(
+      'replaceSurroundingText', [].slice.call(arguments));
   };
   InputContext.prototype.deleteSurroundingText = function() {
-    return this._sendMessage('deleteSurroundingText', arguments);
+    return this._sendMessage(
+      'deleteSurroundingText', [].slice.call(arguments));
   };
   InputContext.prototype.sendKey = function() {
-    return this._sendMessage('sendKey', arguments);
+    return this._sendMessage(
+      'sendKey', [].slice.call(arguments));
   };
   InputContext.prototype.setComposition = function() {
-    return this._sendMessage('setComposition', arguments);
+    return this._sendMessage(
+      'setComposition', [].slice.call(arguments));
   };
   InputContext.prototype.endComposition = function() {
-    return this._sendMessage('endComposition', arguments);
+    return this._sendMessage(
+      'endComposition', [].slice.call(arguments));
   };
 
   /**
