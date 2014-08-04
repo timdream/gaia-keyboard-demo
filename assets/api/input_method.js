@@ -81,8 +81,8 @@
 
   InputContext.prototype = new MockEventTarget();
 
-  InputContext.prototype.type = 'text';
-  InputContext.prototype.inputType = 'text';
+  InputContext.prototype.type = 'textarea';
+  InputContext.prototype.inputType = 'textarea';
   InputContext.prototype.inputMode = '';
   InputContext.prototype.lang = '';
 
