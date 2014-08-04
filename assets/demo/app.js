@@ -51,7 +51,11 @@ KeyboardDemoApp.prototype.handleEvent = function(evt) {
       break;
 
     case 'resizeTo':
-      this.container.style.height = data.args[1] + 'px';
+      // Workaround to prevent the hint being cut off.
+      this.container.style.height = (data.args[1] * 6/4) + 'px';
+      window.requestAnimationFrame(function() {
+        this.container.classList.remove('transitioned-out');
+      }.bind(this));
 
       break;
 

@@ -24,4 +24,9 @@ if (!exports.WeakMap) {
   exports.WeakMap = exports.Map;
 }
 
+/* Disable selection/copy in UIWebView */
+document.body.style.webkitTouchCallout = 'none';
+document.body.style.webkitUserSelect = 'none';
+document.body.style.mozUserSelect = 'none';
+
 }(window));

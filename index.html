@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <title>Firefox OS Keyboard -- online demo</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
   <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-theme.min.css">
   <link rel="stylesheet" href="assets/style.css">
@@ -30,7 +30,7 @@
   <script defer src="assets/demo/bootstrap_app.js"></script>
 </head>
 <body>
-  <div class="navbar navbar-default navbar-fixed-bottom" role="navigation">
+  <div class="navbar navbar-default" role="navigation">
     <div class="container">
       <a class="navbar-brand" href="./">Gaia Keyboard Online Demo</a>
       <select class="form-control" id="mobile-nav">
@@ -49,7 +49,7 @@
   <div class="container">
     <p class="lead"><strong>Gaia Keyboard</strong> is a touchscreen keyboard implemented for <strong>Mozilla Firefox OS</strong>.</p>
     <div id="inputarea" class="well well-sm"></div>
-    <iframe id="keyboard-app-container"></iframe>
   </div>
+  <iframe id="keyboard-app-container" class="transitioned-out"></iframe>
 </body>
 </html>

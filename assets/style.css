@@ -1,8 +1,4 @@
 @media screen and (min-width: 768px) {
-  body {
-    padding: 70px 0;
-  }
-
   *[hidden] {
     display: none;
   }
@@ -40,6 +36,18 @@
   height: 1px;
 
   border: none;
+
+  position: fixed;
+  bottom: 0;
+  left: 0;
+
+  -webkit-transition: -webkit-transform 0.5s ease;
+  transition: transform 0.5s ease;
+}
+
+#keyboard-app-container.transitioned-out {
+  -webkit-transform: translateY(100%);
+  transform: translateY(100%);
 }
 
 body.distraction-free > .container > *:not(#inputarea):not(#panel),
