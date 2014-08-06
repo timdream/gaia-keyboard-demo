@@ -17,6 +17,20 @@ InputMethodHandler.prototype.start = function() {
 };
 
 InputMethodHandler.prototype.handleMessage = function(data) {
+  switch (data.api) {
+    case 'inputcontext':
+      this.handleInputContextMessage(data);
+
+      break;
+
+    case 'inputmethodmanager':
+      console.log(data);
+
+      break;
+  }
+};
+
+InputMethodHandler.prototype.handleInputContextMessage = function(data) {
   switch (data.method) {
     case 'getText':
       var text = Array.prototype.map.call(this.input.childNodes,

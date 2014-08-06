@@ -9,6 +9,8 @@ var KeyboardDemoApp = function() {
 KeyboardDemoApp.prototype.GAIA_APP_DIR = './gaia/apps/keyboard';
 KeyboardDemoApp.prototype.CONTAINER_ID = 'keyboard-app-container';
 
+KeyboardDemoApp.prototype.DEFAULT_LAYOUT_HASH = 'en';
+
 KeyboardDemoApp.prototype.start = function() {
   if (typeof window.Promise !== 'function') {
     window.Promise = window.Q;
@@ -31,6 +33,8 @@ KeyboardDemoApp.prototype.start = function() {
   this.inputMethodHandler.start();
 
   window.addEventListener('message', this);
+
+  window.addEventListener('hashchange', this);
 };
 
 KeyboardDemoApp.prototype.postMessage = function(data) {
@@ -38,7 +42,23 @@ KeyboardDemoApp.prototype.postMessage = function(data) {
 };
 
 KeyboardDemoApp.prototype.handleEvent = function(evt) {
-  var data = evt.data;
+  switch (evt.type) {
+    case 'hashchange':
+      this.postMessage({
+        api: 'updatehash',
+        result: window.location.hash.substr(1) || this.DEFAULT_LAYOUT_HASH
+      });
+
+      break;
+
+    case 'message':
+      this.handleMessage(evt.data);
+
+      break;
+  }
+};
+
+KeyboardDemoApp.prototype.handleMessage = function(data) {
   switch (data.api) {
     case 'settings':
       this.settingsHandler.handleMessage(data);
@@ -46,6 +66,7 @@ KeyboardDemoApp.prototype.handleEvent = function(evt) {
       break;
 
     case 'inputcontext':
+    case 'inputmethodmanager':
       this.inputMethodHandler.handleMessage(data);
 
       break;
@@ -72,7 +93,9 @@ KeyboardDemoApp.prototype._loadBasePage = function() {
     this.container.onerror = function() {
       resolve();
     };
-    this.container.src = this.GAIA_APP_DIR + '/404.html#en';
+    var hash = window.location.hash.substr(1) || this.DEFAULT_LAYOUT_HASH;
+
+    this.container.src = this.GAIA_APP_DIR + '/404.html#' + hash;
 
   }.bind(this));
 };

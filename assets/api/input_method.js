@@ -19,7 +19,6 @@
    */
   var InputMethod = function InputMethod(inputContext) {
     this.inputcontext = inputContext || null;
-    this.mgmt = new InputMethodManager();
   };
 
   InputMethod.prototype = new MockEventTarget();
@@ -27,6 +26,11 @@
   InputMethod.prototype.oninputcontextchange = null;
 
   InputMethod.prototype.inputcontext = null;
+
+  InputMethod.prototype.start = function() {
+    this.mgmt = new InputMethodManager();
+    this.mgmt.start();
+  };
 
   /**
    * Set the mocked inputContext. Will send an inputcontextchange event if
@@ -217,18 +221,44 @@
    *
    */
   var InputMethodManager = function MozInputMethodManager() {
+    this._supportsSwitching = true;
+  };
+
+  InputMethodManager.prototype.start = function() {
+    window.addEventListener('message', this);
+  };
+
+  InputMethodManager.prototype.handleEvent = function(evt) {
+    var data = evt.data;
+
+    if (data.api !== 'inputmethodmanager') {
+      return;
+    }
+
+    this._supportsSwitching = data.result;
+  };
+
+  InputMethodManager.prototype._sendMessage = function(method) {
+    window.parent.postMessage({
+      api: 'inputmethodmanager',
+      method: method
+    } , '*');
   };
 
   InputMethodManager.prototype.showAll = function() {
+    this._sendMessage('showAll');
   };
 
   InputMethodManager.prototype.next = function() {
+    this._sendMessage('next');
   };
 
   InputMethodManager.prototype.hide = function() {
+    this._sendMessage('hide');
   };
 
   InputMethodManager.prototype.supportsSwitching = function() {
+    return this._supportsSwitching;
   };
 
   exports.InputMethodManager = InputMethodManager;
