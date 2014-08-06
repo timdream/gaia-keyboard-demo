@@ -80,6 +80,9 @@ KeyboardDemoApp.prototype.handleMessage = function(data) {
 
       break;
 
+    case 'prepareapi':
+      break;
+
     default:
       throw new Error('KeyboardDemoApp: Unknown message.');
 
@@ -95,9 +98,10 @@ KeyboardDemoApp.prototype._loadBasePage = function() {
     };
     var hash = window.location.hash.substr(1) || this.DEFAULT_LAYOUT_HASH;
 
-    this.container.src = this.GAIA_APP_DIR + '/404.html#' + hash;
+    this.container.src =
+      'blank.html#' + this.GAIA_APP_DIR + '/index.html#' + hash;
 
-  }.bind(this));
+  }.bind(this)).then(this._prepareAPI.bind(this));
 };
 
 KeyboardDemoApp.prototype._getIndexHTMLContent = function() {
@@ -115,7 +119,7 @@ KeyboardDemoApp.prototype._getIndexHTMLContent = function() {
   }.bind(this));
 };
 
-KeyboardDemoApp.prototype._prepareDOM = function(values) {
+KeyboardDemoApp.prototype._prepareAPI = function() {
   var destDoc = this.container.contentWindow.document;
   // Clean up the document.
   destDoc.documentElement.innerHTML = '';
@@ -132,7 +136,6 @@ KeyboardDemoApp.prototype._prepareDOM = function(values) {
     destHeadNode.appendChild(el);
   });
 
-  var PARENT_DIR = this.GAIA_APP_DIR.replace(/[^\/\.]+/g, '..') + '/';
   ['assets/api/keyboard_event.js',
    'assets/api/event_target.js',
    'assets/api/dom_request.js',
@@ -140,10 +143,31 @@ KeyboardDemoApp.prototype._prepareDOM = function(values) {
    'assets/api/input_method.js',
    'assets/api/bootstrap_api.js'].forEach(function(src) {
     var el = destDoc.createElement('script');
-    el.src = PARENT_DIR + src;
+    el.src = src;
     el.async = false;
     destHeadNode.appendChild(el);
   });
+
+  var p = new Promise(function(resolve) {
+    window.addEventListener('message', function apiReady(evt) {
+      if (evt.data.api !== 'prepareapi') {
+        return;
+      }
+
+      window.removeEventListener('message', apiReady);
+      resolve();
+    });
+  }.bind(this));
+
+  return p;
+};
+
+KeyboardDemoApp.prototype._prepareDOM = function(values) {
+  var destDoc = this.container.contentWindow.document;
+  // Clean up the document.
+  destDoc.documentElement.innerHTML = '';
+
+  var destHeadNode = destDoc.documentElement.firstElementChild;
 
   // Copy the imported DOM into the document.
   var sourceHeadNode = destDoc.importNode(

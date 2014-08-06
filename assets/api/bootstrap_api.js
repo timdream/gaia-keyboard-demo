@@ -40,4 +40,11 @@ document.body.style.webkitTouchCallout = 'none';
 document.body.style.webkitUserSelect = 'none';
 document.body.style.mozUserSelect = 'none';
 
+window.history.replaceState(null, '', window.location.hash.substr(1));
+
+window.parent.postMessage({
+  api: 'prepareapi',
+  result: true
+}, '*');
+
 }(window));
