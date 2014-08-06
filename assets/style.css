@@ -69,3 +69,28 @@ body > *:not(.container) {
   font-size: 140%;
   outline: none;
 }
+
+@-webkit-keyframes blink-caret {
+  from, to {
+    border-color: transparent
+  }
+  50% {
+    border-color: black
+  }
+}
+
+@keyframes blink-caret {
+  from, to {
+    border-color: transparent
+  }
+  50% {
+    border-color: black
+  }
+}
+
+#composition {
+  border-right: 2px solid;
+
+  -webkit-animation: blink-caret 1s step-end infinite;
+  animation: blink-caret 1s step-end infinite;
+}
