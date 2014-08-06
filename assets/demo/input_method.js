@@ -165,6 +165,7 @@ InputMethodHandler.prototype._handleInput = function(job, str, offset, length) {
 
     case 'return':
       container.appendChild(document.createElement('br'));
+      window.scrollBy(0, 20);
 
       break;
 

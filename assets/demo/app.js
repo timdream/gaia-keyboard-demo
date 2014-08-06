@@ -74,6 +74,7 @@ KeyboardDemoApp.prototype.handleMessage = function(data) {
     case 'resizeTo':
       // Workaround to prevent the hint being cut off.
       this.container.style.height = (data.args[1] * 6/4) + 'px';
+      document.body.style.paddingBottom = data.args[1] + 'px';
       window.requestAnimationFrame(function() {
         this.container.classList.remove('transitioned-out');
       }.bind(this));
