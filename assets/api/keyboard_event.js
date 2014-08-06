@@ -235,7 +235,9 @@ if (!exports.KeyEvent) {
   exports.KeyEvent = KeyEvent;
 
   for (var prop in KeyEvent) {
-    exports.KeyboardEvent[prop] = KeyEvent[prop];
+    if (!(prop in KeyboardEvent)) {
+      exports.KeyboardEvent[prop] = KeyEvent[prop];
+    }
   }
 };
 
