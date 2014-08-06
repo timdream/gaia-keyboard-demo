@@ -23,8 +23,17 @@
     }
 
   </script>
-  <script defer src="//cdnjs.cloudflare.com/ajax/libs/q.js/1.0.1/q.min.js"></script>
-  <script defer src="//cdnjs.cloudflare.com/ajax/libs/es6-shim/0.11.0/es6-shim.min.js"></script>
+  <script>
+  if (!window.Promise) {
+    document.write(
+      '<script defer src="//cdnjs.cloudflare.com/ajax/libs/q.js/1.0.1/q.min.js"><' + '/script>');
+  }
+
+  if (!window.Map) {
+    document.write(
+      '<script defer src="//cdnjs.cloudflare.com/ajax/libs/es6-shim/0.11.0/es6-shim.min.js"><' + '/script>');
+  }
+  </script>
   <script defer src="assets/demo/input_method.js"></script>
   <script defer src="assets/demo/settings.js"></script>
   <script defer src="assets/demo/app.js"></script>
@@ -53,6 +62,6 @@
       <span id="inputtext"></span><span id="composition"></span>
     </div>
   </div>
-  <iframe id="keyboard-app-container" class="transitioned-out"></iframe>
+  <iframe id="keyboard-app-container" class="transitioned-out" sandbox="allow-scripts allow-same-origin"></iframe>
 </body>
 </html>
