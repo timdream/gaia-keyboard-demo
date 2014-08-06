@@ -109,6 +109,10 @@ InputMethodHandler.prototype._handleInput = function(job, str, offset, length) {
   var container = this.input;
   var lastChild = this.input.lastChild;
 
+  if (typeof str === 'string') {
+    str = str.replace(/ /g, String.fromCharCode(0xA0));
+  }
+
   switch (job) {
     case 'append':
       if (lastChild.nodeName !== '#text') {
