@@ -90,6 +90,7 @@ body > *:not(.container) {
 
 #composition {
   border-right: 2px solid;
+  text-decoration: underline;
 
   -webkit-animation: blink-caret 1s step-end infinite;
   animation: blink-caret 1s step-end infinite;

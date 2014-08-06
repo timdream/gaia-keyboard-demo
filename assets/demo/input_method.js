@@ -7,10 +7,13 @@ var InputMethodHandler = function(app) {
 };
 
 InputMethodHandler.prototype.INPUT_ELEMENT_ID = 'inputtext';
+InputMethodHandler.prototype.COMPOSITION_ELEMENT_ID = 'composition';
 
 InputMethodHandler.prototype.start = function() {
   this.input = document.getElementById(this.INPUT_ELEMENT_ID);
   this.input.appendChild(document.createTextNode(''));
+
+  this.composition = document.getElementById(this.COMPOSITION_ELEMENT_ID);
 };
 
 InputMethodHandler.prototype.handleMessage = function(data) {
@@ -90,9 +93,32 @@ InputMethodHandler.prototype.handleMessage = function(data) {
 
       break;
 
-    case 'setSelectionRange':
     case 'setComposition':
+      this.composition.textContent = data.args[0];
+
+      this.app.postMessage({
+        api: data.api,
+        contextId: data.contextId,
+        id: data.id,
+        result: ''
+      });
+
+      break;
+
     case 'endComposition':
+      this.composition.textContent = '';
+      this._handleInput('append', data.args[0]);
+
+      this.app.postMessage({
+        api: data.api,
+        contextId: data.contextId,
+        id: data.id,
+        result: ''
+      });
+
+      break;
+
+    case 'setSelectionRange':
 
       this.app.postMessage({
         api: data.api,
