@@ -1,123 +1,14 @@
 <!doctype html>
-<html lang="en">
+<html lang="zh-TW">
 <head>
   <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <title>B2G Gaia keyboard test</title>
-  <style>
-  iframe {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 320px;
-    height: 480px;
-    margin-top: -240px;
-    margin-left: -160px;
-    border: none;
-    background-color: #222;
-    -moz-transition: all ease 0.5s;
-  }
-  iframe.hori {
-    width: 480px;
-    height: 320px;
-    margin-top: -160px;
-    margin-left: -240px;
-  }
-  body {
-    background-color: #000;
-    color: #fff;
-    font: 20px sans-serif;
-  }
-  a {
-    color: #ddf;
-  }
-
-  a.about {
-    position: absolute;
-    right: 50px;
-    bottom: 50px;
-    text-decoration: none;
-    border: 1px solid #fff;
-    border-radius: 5px;
-    padding: 10px;
-  }
-
-  a.lock {
-    position: absolute;
-    left: 50px;
-    bottom: 50px;
-    text-decoration: none;
-    border: 1px solid #fff;
-    border-radius: 5px;
-    padding: 10px;
-  }
-  a.lock.on {
-    background-color: #ccc;
-    color: #000;
-  }
-
-  a.hori {
-    position: absolute;
-    left: 150px;
-    bottom: 50px;
-    text-decoration: none;
-    border: 1px solid #fff;
-    border-radius: 5px;
-    padding: 10px;
-  }
-  a.hori.on {
-    background-color: #ccc;
-    color: #000;
-  }
-
-  a.close {
-    float: right;
-    text-decoration: none;
-    border: 1px solid #fff;
-    border-radius: 5px;
-    padding: 10px;
-  }
-
-  #about {
-    display: none;
-  }
-
-  #about:target {
-    display: block;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 480px;
-    height: 500px;
-    margin-top: -250px;
-    margin-left: -240px;
-    background-color: rgba(0,0,0,0.8);
-    color: #fff;
-    -moz-box-sizing: border-box;
-    padding: 30px;
-  }
-  </style>
+  <title>Gaia Keyboard Deom</title>
 </head>
 <body>
-<iframe src="./system.html"></iframe>
-<p><a class="lock" href="#">Keep on</a></p>
-<p><a class="hori" href="#">Horizontal</a></p>
-<p><a class="about" href="#about">About</a></p>
-<div id="about">
-  <h1>Gaia is a HTML5-based Phone UI for the Boot 2 Gecko Project</h1>
-  <p>This is the keyboard and IME lives in Gaia.</p>
-  <p>Due to usage of Mozilla specific JavaScript 1.8 syntax and IndexedDB API,
-this demo can only be run in <a href="http://nightly.mozilla.org/" target="_blank">Nightly</a> or <a href="http://www.mozilla.org/en-US/firefox/channel/" target="_blank">Aurora</a> version of Firefox.</p>
-  <p><a href="https://wiki.mozilla.org/B2G" target="_blank">Understanding more about B2G &amp; Gaia</a>.</p>
-  <p><a href="https://github.com/timdream/gaia-keyboard-demo" target="_blank">Source code of this demo</a>.</p>
-
-  <p><a class="close" href="#">Close</a></p>
-</div>
-<script>
-  var _gaq=[['_setAccount','UA-401106-1'],['_trackPageview']]; // Change UA-XXXXX-X to be your site's ID
-  (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];g.async=1;
-  g.src='http://www.google-analytics.com/ga.js';
-  s.parentNode.insertBefore(g,s)}(document,'script'));
-</script>
+  <p>Demo is <a href="http://timdream.org/gaia-keyboard-demo/">here</a>.</p>
+  <script>
+  window.location.replace('http://timdream.org/gaia-keyboard-demo/');
+  </script>
 </body>
 </html>
+
