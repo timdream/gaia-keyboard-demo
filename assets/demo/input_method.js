@@ -156,16 +156,19 @@ InputMethodHandler.prototype._handleInput = function(job, str, offset, length) {
   var container = this.input;
   var lastChild = this.input.lastChild;
 
-  if (typeof str === 'string') {
-    str = str.replace(/ /g, String.fromCharCode(0xA0));
-  }
-
   switch (job) {
     case 'append':
       if (lastChild.nodeName !== '#text') {
         container.appendChild(document.createTextNode(str));
       } else {
-        lastChild.textContent += str;
+        var text = lastChild.textContent + str;
+        // The witchcraft is needed because we need to use nbsp to prevent
+        // space from collapsing, but the same time we want word breaks if
+        // needed.
+        //
+        // XXX: This is not the most efficient way to do it.
+        lastChild.textContent = text.replace(/ /g, String.fromCharCode(0xA0))
+          .replace(/\xA0(\S)/g, function(m0, m1) { return ' ' + m1; });
       }
 
       break;
@@ -197,10 +200,14 @@ InputMethodHandler.prototype._handleInput = function(job, str, offset, length) {
       }
 
       var text = lastChild.textContent;
-      lastChild.textContent = text.substr(0, text.length + offset) + str;
+      var resultText = '';
+      resultText = text.substr(0, text.length + offset) + str;
       if (offset !== - length) {
-        lastChild.textContent += text.substr(text.length + offset + length);
+        resultText += text.substr(text.length + offset + length);
       }
+      lastChild.textContent =
+        resultText.replace(/ /g, String.fromCharCode(0xA0))
+          .replace(/\xA0(\S)/g, function(m0, m1) { return ' ' + m1; });
 
       break;
   }
