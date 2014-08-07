@@ -227,8 +227,10 @@ InputMethodHandler.prototype._handleInput = function(job, str, offset, length) {
             lastChild !== container.firstChild) {
           container.removeChild(lastChild);
         } else {
-          lastChild.textContent =
-            lastChild.textContent.substr(0, lastChild.textContent.length - 1);
+          lastChild.textContent = lastChild.textContent
+            .substr(0, lastChild.textContent.length - 1)
+            .replace(/ /g, String.fromCharCode(0xA0))
+            .replace(/\xA0(\S)/g, function(m0, m1) { return ' ' + m1; });
         }
       }.bind(this));
 
