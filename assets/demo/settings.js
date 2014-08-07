@@ -33,12 +33,26 @@ SettingsHandler.prototype.handleMessage = function(data) {
       break;
 
     case 'set':
-    case 'clear':
+      var key;
+      for (key in data.args[0]) {
+        this.settings.set(key, data.args[0][key]);
+      }
       this.app.postMessage({
         api: data.api,
         lockId: data.lockId,
         id: data.id,
-        error: 'Unimplemented'
+        result: data.args[0]
+      });
+
+      break;
+
+    case 'clear':
+      this.settings.delete(data.args[0]);
+      this.app.postMessage({
+        api: data.api,
+        lockId: data.lockId,
+        id: data.id,
+        result: data.args[0]
       });
 
       break;
