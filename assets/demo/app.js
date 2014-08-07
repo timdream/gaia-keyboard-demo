@@ -6,6 +6,7 @@ var KeyboardDemoApp = function() {
   this.container = null;
 };
 
+KeyboardDemoApp.prototype.INPUTAREA_ELEMENT_ID = 'inputarea';
 KeyboardDemoApp.prototype.GAIA_APP_DIR = './gaia/apps/keyboard';
 KeyboardDemoApp.prototype.CONTAINER_ID = 'keyboard-app-container';
 
@@ -26,6 +27,51 @@ KeyboardDemoApp.prototype.start = function() {
 
   window.addEventListener('message', this);
   window.addEventListener('hashchange', this);
+
+  this.inputarea = document.getElementById(this.INPUTAREA_ELEMENT_ID);
+  this.inputarea.addEventListener('mousedown', this);
+
+  this.focused = true;
+};
+
+KeyboardDemoApp.prototype.getFocus = function() {
+  if (this.focused) {
+    return;
+  }
+
+  var info = this.inputMethodHandler.getSelectionInfo();
+
+  this.postMessage({
+    api: 'inputmethod',
+    method: 'setInputContext',
+    ctx: true,
+    selectionStart: info.selectionStart,
+    selectionEnd: info.selectionEnd,
+    textBeforeCursor: info.textBeforeCursor,
+    textAfterCursor: info.textAfterCursor
+  });
+  this.focused = true;
+  this.inputarea.classList.add('focused');
+
+  // We rely on app to tell us when it will be ready to be visible.
+  // this.container.classList.remove('transitioned-out');
+};
+
+KeyboardDemoApp.prototype.removeFocus = function() {
+  if (!this.focused) {
+    return;
+  }
+
+  this.postMessage({
+    api: 'inputmethod',
+    method: 'setInputContext',
+    ctx: false
+  });
+  this.focused = false;
+  window.requestAnimationFrame(function() {
+    this.container.classList.add('transitioned-out');
+    this.inputarea.classList.remove('focused');
+  }.bind(this));
 };
 
 KeyboardDemoApp.prototype.postMessage = function(data) {
@@ -47,6 +93,11 @@ KeyboardDemoApp.prototype.handleEvent = function(evt) {
       this.handleMessage(evt.data);
 
       break;
+
+    case 'mousedown':
+      this.getFocus();
+
+      break;
   }
 };
 
@@ -57,6 +108,7 @@ KeyboardDemoApp.prototype.handleMessage = function(data) {
 
       break;
 
+    case 'inputmethod':
     case 'inputcontext':
     case 'inputmethodmanager':
       this.inputMethodHandler.handleMessage(data);

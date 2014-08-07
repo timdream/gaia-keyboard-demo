@@ -21,10 +21,7 @@ KeyboardAppStarter.prototype.start = function() {
 KeyboardAppStarter.prototype._startAPI = function() {
   navigator.mozSettings = new NavigatorMozSettings();
 
-  var inputcontext = new InputContext();
-  inputcontext.start();
-
-  navigator.mozInputMethod = new InputMethod(inputcontext);
+  navigator.mozInputMethod = new InputMethod();
   navigator.mozInputMethod.start();
 
   window.resizeTo = function(width, height) {

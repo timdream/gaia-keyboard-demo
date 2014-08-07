@@ -26,7 +26,7 @@ InputMethodHandler.prototype.handleMessage = function(data) {
       break;
 
     case 'inputmethodmanager':
-      console.log(data);
+      this.handleInputMethodManagerMessage(data);
 
       break;
   }
@@ -89,7 +89,7 @@ InputMethodHandler.prototype.handleInputContextMessage = function(data) {
         api: data.api,
         contextId: data.contextId,
         id: data.id,
-        result: this._getSelectionInfo()
+        result: this.getSelectionInfo()
       });
 
       this._updateSelectionContext();
@@ -103,7 +103,7 @@ InputMethodHandler.prototype.handleInputContextMessage = function(data) {
         api: data.api,
         contextId: data.contextId,
         id: data.id,
-        result: this._getSelectionInfo()
+        result: this.getSelectionInfo()
       });
 
       this._updateSelectionContext();
@@ -147,6 +147,27 @@ InputMethodHandler.prototype.handleInputContextMessage = function(data) {
         id: data.id,
         error: 'Unimplemented'
       });
+
+      break;
+  }
+};
+
+InputMethodHandler.prototype.handleInputMethodManagerMessage = function(data) {
+  switch (data.method) {
+    case 'showAll':
+      alert('Show all enabled layouts is not implemented yet.\n' +
+        'Change the URL hash to switch layout.');
+
+      break;
+
+    case 'next':
+      alert('Switch to next enabled layouts is not implemented yet.\n' +
+        'Change the URL hash to switch layout.');
+
+      break;
+
+    case 'hide':
+      this.app.removeFocus();
 
       break;
   }
@@ -213,7 +234,7 @@ InputMethodHandler.prototype._handleInput = function(job, str, offset, length) {
   }
 };
 
-InputMethodHandler.prototype._getSelectionInfo = function() {
+InputMethodHandler.prototype.getSelectionInfo = function() {
   var selectionStart = Array.prototype.reduce.call(this.input.childNodes,
     function(val, node) {
       if (node.nodeName !== '#text') {
@@ -243,7 +264,7 @@ InputMethodHandler.prototype._updateSelectionContext = function() {
   this.app.postMessage({
     api: 'inputcontext',
     method: 'updateSelectionContext',
-    result: this._getSelectionInfo()
+    result: this.getSelectionInfo()
   });
 };
 

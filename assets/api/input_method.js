@@ -30,6 +30,44 @@
   InputMethod.prototype.start = function() {
     this.mgmt = new InputMethodManager();
     this.mgmt.start();
+
+    this.inputcontext = new InputContext();
+    this.inputcontext.start();
+
+    window.addEventListener('message', this);
+  };
+
+  InputMethod.prototype.stop = function() {
+    window.removeEventListener('message', this);
+  };
+
+  InputMethod.prototype.handleEvent = function(evt) {
+    var data = evt.data;
+
+    if (data.api !== 'inputmethod') {
+      return;
+    }
+
+    switch (data.method) {
+      case 'setInputContext':
+        if (this.inputcontext) {
+          this.inputcontext.stop();
+        }
+
+        var ctx = null;
+        if (data.ctx) {
+          ctx = new InputContext();
+          ctx.selectionStart = data.selectionStart;
+          ctx.selectionEnd = data.selectionEnd;
+          ctx.textBeforeCursor = data.textBeforeCursor;
+          ctx.textAfterCursor = data.textAfterCursor;
+          ctx.start();
+        }
+
+        this.setInputContext(ctx);
+
+        break;
+    }
   };
 
   /**

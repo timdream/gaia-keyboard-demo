@@ -72,25 +72,28 @@ body > *:not(.container) {
 
 @-webkit-keyframes blink-caret {
   from, to {
-    border-color: transparent
+    border-color: black
   }
   50% {
-    border-color: black
+    border-color: transparent
   }
 }
 
 @keyframes blink-caret {
   from, to {
-    border-color: transparent
+    border-color: black
   }
   50% {
-    border-color: black
+    border-color: transparent
   }
 }
 
 #composition {
-  border-right: 2px solid;
   text-decoration: underline;
+}
+
+#inputarea.focused > #composition {
+  border-right: 2px solid;
 
   -webkit-animation: blink-caret 1s step-end infinite;
   animation: blink-caret 1s step-end infinite;
