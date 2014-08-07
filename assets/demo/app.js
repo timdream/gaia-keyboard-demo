@@ -12,10 +12,6 @@ KeyboardDemoApp.prototype.CONTAINER_ID = 'keyboard-app-container';
 KeyboardDemoApp.prototype.DEFAULT_LAYOUT_HASH = 'en';
 
 KeyboardDemoApp.prototype.start = function() {
-  if (typeof window.Promise !== 'function') {
-    window.Promise = window.Q;
-  }
-
   this.container = document.getElementById(this.CONTAINER_ID);
 
   var hash = window.location.hash.substr(1) || this.DEFAULT_LAYOUT_HASH;

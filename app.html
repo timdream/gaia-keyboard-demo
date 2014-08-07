@@ -3,12 +3,7 @@
 <head>
   <meta charset="utf-8">
   <script>
-  if (!window.Promise) {
-    document.write(
-      '<script defer src="//cdnjs.cloudflare.com/ajax/libs/q.js/1.0.1/q.min.js"><' + '/script>');
-  }
-
-  if (!window.Map) {
+  if (!window.Map || !window.Promise || !window.WeakMap) {
     document.write(
       '<script defer src="//cdnjs.cloudflare.com/ajax/libs/es6-shim/0.11.0/es6-shim.min.js"><' + '/script>');
   }
