@@ -6,6 +6,8 @@ var InputMethodHandler = function(app) {
   this.app = app;
   this._selectionStart = -1;
   this._text = '';
+
+  this._currentText = '';
 };
 
 InputMethodHandler.prototype.INPUT_ELEMENT_ID = 'inputtext';
@@ -35,7 +37,7 @@ InputMethodHandler.prototype.handleMessage = function(data) {
 InputMethodHandler.prototype.handleInputContextMessage = function(data) {
   switch (data.method) {
     case 'getText':
-      var text = this._getText();
+      var text = this._currentText;
 
       this.app.postMessage({
         api: data.api,
@@ -111,7 +113,7 @@ InputMethodHandler.prototype.handleInputContextMessage = function(data) {
       break;
 
     case 'setComposition':
-      this.composition.textContent = data.args[0];
+      this._handleInput('updateComposition', data.args[0]);
 
       this.app.postMessage({
         api: data.api,
@@ -125,7 +127,6 @@ InputMethodHandler.prototype.handleInputContextMessage = function(data) {
       break;
 
     case 'endComposition':
-      this.composition.textContent = '';
       this._handleInput('append', data.args[0]);
 
       this.app.postMessage({
@@ -178,73 +179,94 @@ InputMethodHandler.prototype._handleInput = function(job, str, offset, length) {
   var lastChild = this.input.lastChild;
 
   switch (job) {
+    case 'updateComposition':
+      window.requestAnimationFrame(function() {
+        this.composition.textContent = str;
+      }.bind(this));
+
+      break;
+
     case 'append':
-      if (lastChild.nodeName !== '#text') {
-        container.appendChild(document.createTextNode(str));
-      } else {
-        var text = lastChild.textContent + str;
-        // The witchcraft is needed because we need to use nbsp to prevent
-        // space from collapsing, but the same time we want word breaks if
-        // needed.
-        //
-        // XXX: This is not the most efficient way to do it.
-        lastChild.textContent = text.replace(/ /g, String.fromCharCode(0xA0))
-          .replace(/\xA0(\S)/g, function(m0, m1) { return ' ' + m1; });
-      }
+      this._currentText += str;
+
+      window.requestAnimationFrame(function() {
+        this.composition.textContent = '';
+        if (lastChild.nodeName !== '#text') {
+          container.appendChild(document.createTextNode(str));
+        } else {
+          var text = lastChild.textContent + str;
+          // The witchcraft is needed because we need to use nbsp to prevent
+          // space from collapsing, but the same time we want word breaks if
+          // needed.
+          //
+          // XXX: This is not the most efficient way to do it.
+          lastChild.textContent = text.replace(/ /g, String.fromCharCode(0xA0))
+            .replace(/\xA0(\S)/g, function(m0, m1) { return ' ' + m1; });
+        }
+      }.bind(this));
 
       break;
 
     case 'return':
-      container.appendChild(document.createElement('br'));
-      window.scrollBy(0, 20);
+      this._currentText += '\n';
+
+      window.requestAnimationFrame(function() {
+        container.appendChild(document.createElement('br'));
+        window.scrollBy(0, 20);
+      }.bind(this));
 
       break;
 
     case 'backspace':
-      if ((lastChild.nodeName !== '#text' ||
-            lastChild.textContent.length === 1) &&
-          lastChild !== container.firstChild) {
-        container.removeChild(lastChild);
-      } else {
-        lastChild.textContent =
-          lastChild.textContent.substr(0, lastChild.textContent.length - 1);
-      }
+      this._currentText =
+        this._currentText.substr(0, this._currentText.length - 1);
+
+      window.requestAnimationFrame(function() {
+        if ((lastChild.nodeName !== '#text' ||
+              lastChild.textContent.length === 1) &&
+            lastChild !== container.firstChild) {
+          container.removeChild(lastChild);
+        } else {
+          lastChild.textContent =
+            lastChild.textContent.substr(0, lastChild.textContent.length - 1);
+        }
+      }.bind(this));
 
       break;
 
     case 'replace':
-      if (lastChild.textContent.length < length) {
-        console.error('Unimplemented: ' +
-          'replaceSurroundingText range reaches return.');
-
-        break;
-      }
-
-      var text = lastChild.textContent;
-      var resultText = '';
-      resultText = text.substr(0, text.length + offset) + str;
+      var text = this._currentText;
+      this._currentText = text.substr(0, text.length + offset) + str;
       if (offset !== - length) {
-        resultText += text.substr(text.length + offset + length);
+        this._currentText += text.substr(text.length + offset + length);
       }
-      lastChild.textContent =
-        resultText.replace(/ /g, String.fromCharCode(0xA0))
-          .replace(/\xA0(\S)/g, function(m0, m1) { return ' ' + m1; });
+
+      window.requestAnimationFrame(function() {
+        if (lastChild.textContent.length < length) {
+          console.error('Unimplemented: ' +
+            'replaceSurroundingText range reaches return.');
+
+          return;
+        }
+
+        var text = lastChild.textContent;
+        var resultTextContent = '';
+        resultTextContent = text.substr(0, text.length + offset) + str;
+        if (offset !== - length) {
+          resultTextContent += text.substr(text.length + offset + length);
+        }
+        lastChild.textContent =
+          resultTextContent.replace(/ /g, String.fromCharCode(0xA0))
+            .replace(/\xA0(\S)/g, function(m0, m1) { return ' ' + m1; });
+      }.bind(this));
 
       break;
   }
 };
 
 InputMethodHandler.prototype.getSelectionInfo = function() {
-  var selectionStart = Array.prototype.reduce.call(this.input.childNodes,
-    function(val, node) {
-      if (node.nodeName !== '#text') {
-        return val + 1;
-      } else {
-        return val + node.textContent.length;
-      }
-    }, 0);
-
-  var text = this._getText();
+  var text = this._currentText;
+  var selectionStart = text.length;
   var changed = (text !== this._text ||
     selectionStart !== this._selectionStart);
 
@@ -266,17 +288,6 @@ InputMethodHandler.prototype._updateSelectionContext = function() {
     method: 'updateSelectionContext',
     result: this.getSelectionInfo()
   });
-};
-
-InputMethodHandler.prototype._getText = function() {
-  return Array.prototype.map.call(this.input.childNodes,
-    function(node) {
-      if (node.nodeName !== '#text') {
-        return '\n';
-      } else {
-        return node.textContent.replace(/\xA0/g, ' ');
-      }
-    }).join('');
 };
 
 exports.InputMethodHandler = InputMethodHandler;
