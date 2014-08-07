@@ -38,11 +38,6 @@ KeyboardAppStarter.prototype._startAPI = function() {
   if (!exports.WeakMap) {
     exports.WeakMap = exports.Map;
   }
-
-  /* Disable selection/copy in UIWebView */
-  document.body.style.webkitTouchCallout = 'none';
-  document.body.style.webkitUserSelect = 'none';
-  document.body.style.mozUserSelect = 'none';
 };
 
 KeyboardAppStarter.prototype.handleEvent = function(evt) {
@@ -85,6 +80,13 @@ KeyboardAppStarter.prototype._prepareDOM = function(sourceDoc) {
   var sourceHeadNode = document.importNode(
     sourceDoc.documentElement.firstElementChild, true);
   var sourceBodyNode = document.importNode(sourceDoc.body, true);
+
+  ['../../../assets/api.css'].forEach(function(url) {
+      var el = document.createElement('link');
+      el.href = url;
+      el.rel = 'stylesheet';
+      destHeadNode.appendChild(el);
+    });
 
   Array.prototype.forEach.call(sourceHeadNode.children, function(node, i) {
     if (node.nodeName === 'SCRIPT') {
