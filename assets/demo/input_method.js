@@ -38,7 +38,7 @@ InputMethodHandler.prototype.handleInputContextMessage = function(data) {
           if (node.nodeName !== '#text') {
             return '\n';
           } else {
-            return node.textContent;
+            return node.textContent.replace(/\xA0/g, ' ');
           }
         }).join('');
 
