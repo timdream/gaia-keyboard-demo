@@ -118,7 +118,18 @@
   InputContext.prototype.handleEvent = function(evt) {
     var data = evt.data;
 
-    if (data.api !== 'inputcontext' || data.contextId !== this._contextId) {
+    if (data.api !== 'inputcontext') {
+      return;
+    }
+
+    if (data.method) {
+      switch (data.method) {
+        case 'updateSelectionContext':
+          this._updateSelectionContext(data.result);
+
+          break;
+      }
+
       return;
     }
 
@@ -157,6 +168,26 @@
     } , '*');
 
     return p;
+  };
+
+  InputContext.prototype._updateSelectionContext = function(ctx) {
+    var selectionDirty = this.selectionStart !== ctx.selectionStart ||
+          this.selectionEnd !== ctx.selectionEnd;
+    var surroundDirty = this.textBeforeCursor !== ctx.textBeforeCursor ||
+          this.textAfterCursor !== ctx.textAfterCursor;
+
+    this.selectionStart = ctx.selectionStart;
+    this.selectionEnd = ctx.selectionEnd;
+    this.textBeforeCursor = ctx.textBeforeCursor;
+    this.textAfterCursor = ctx.textAfterCursor;
+
+    if (selectionDirty) {
+      this.fireSelectionChange();
+    }
+
+    if (surroundDirty) {
+      this.fireSurroundingTextChange();
+    }
   };
 
   InputContext.prototype.fireSurroundingTextChange = function() {

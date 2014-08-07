@@ -4,6 +4,8 @@
 
 var InputMethodHandler = function(app) {
   this.app = app;
+  this._selectionStart = -1;
+  this._text = '';
 };
 
 InputMethodHandler.prototype.INPUT_ELEMENT_ID = 'inputtext';
@@ -33,14 +35,7 @@ InputMethodHandler.prototype.handleMessage = function(data) {
 InputMethodHandler.prototype.handleInputContextMessage = function(data) {
   switch (data.method) {
     case 'getText':
-      var text = Array.prototype.map.call(this.input.childNodes,
-        function(node) {
-          if (node.nodeName !== '#text') {
-            return '\n';
-          } else {
-            return node.textContent.replace(/\xA0/g, ' ');
-          }
-        }).join('');
+      var text = this._getText();
 
       this.app.postMessage({
         api: data.api,
@@ -48,6 +43,8 @@ InputMethodHandler.prototype.handleInputContextMessage = function(data) {
         id: data.id,
         result: text
       });
+
+      this._updateSelectionContext();
 
       break;
 
@@ -81,6 +78,8 @@ InputMethodHandler.prototype.handleInputContextMessage = function(data) {
         result: ''
       });
 
+      this._updateSelectionContext();
+
       break;
 
     case 'replaceSurroundingText':
@@ -90,8 +89,10 @@ InputMethodHandler.prototype.handleInputContextMessage = function(data) {
         api: data.api,
         contextId: data.contextId,
         id: data.id,
-        result: ''
+        result: this._getSelectionInfo()
       });
+
+      this._updateSelectionContext();
 
       break;
 
@@ -102,8 +103,10 @@ InputMethodHandler.prototype.handleInputContextMessage = function(data) {
         api: data.api,
         contextId: data.contextId,
         id: data.id,
-        result: ''
+        result: this._getSelectionInfo()
       });
+
+      this._updateSelectionContext();
 
       break;
 
@@ -117,6 +120,8 @@ InputMethodHandler.prototype.handleInputContextMessage = function(data) {
         result: ''
       });
 
+      this._updateSelectionContext();
+
       break;
 
     case 'endComposition':
@@ -129,6 +134,8 @@ InputMethodHandler.prototype.handleInputContextMessage = function(data) {
         id: data.id,
         result: ''
       });
+
+      this._updateSelectionContext();
 
       break;
 
@@ -197,6 +204,51 @@ InputMethodHandler.prototype._handleInput = function(job, str, offset, length) {
 
       break;
   }
+};
+
+InputMethodHandler.prototype._getSelectionInfo = function() {
+  var selectionStart = Array.prototype.reduce.call(this.input.childNodes,
+    function(val, node) {
+      if (node.nodeName !== '#text') {
+        return val + 1;
+      } else {
+        return val + node.textContent.length;
+      }
+    }, 0);
+
+  var text = this._getText();
+  var changed = (text !== this._text ||
+    selectionStart !== this._selectionStart);
+
+  this._text = text;
+  this._selectionStart = selectionStart;
+
+  return {
+    selectionStart: selectionStart,
+    selectionEnd: selectionStart,
+    textBeforeCursor: text,
+    textAfterCursor: '',
+    changed: changed
+  }
+};
+
+InputMethodHandler.prototype._updateSelectionContext = function() {
+  this.app.postMessage({
+    api: 'inputcontext',
+    method: 'updateSelectionContext',
+    result: this._getSelectionInfo()
+  });
+};
+
+InputMethodHandler.prototype._getText = function() {
+  return Array.prototype.map.call(this.input.childNodes,
+    function(node) {
+      if (node.nodeName !== '#text') {
+        return '\n';
+      } else {
+        return node.textContent.replace(/\xA0/g, ' ');
+      }
+    }).join('');
 };
 
 exports.InputMethodHandler = InputMethodHandler;
