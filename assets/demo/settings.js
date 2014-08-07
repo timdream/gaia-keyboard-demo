@@ -9,11 +9,13 @@ var SettingsHandler = function(app) {
   this.settings.set('keyboard.wordsuggestion', true);
   this.settings.set('keyboard.autocorrect', true);
   this.settings.set('keyboard.vibration', true);
-  this.settings.set('keyboard.clicksound', true);
   this.settings.set('audio.volume.notification', 10);
 };
 
 SettingsHandler.prototype.start = function() {
+  // Turn off sound feedback if this platform does not support audio.
+  var canPlayOgg = (new Audio()).canPlayType('audio/ogg');
+  this.settings.set('keyboard.clicksound', !!canPlayOgg);
 };
 
 SettingsHandler.prototype.handleMessage = function(data) {
