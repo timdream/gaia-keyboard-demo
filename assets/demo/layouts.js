@@ -93,6 +93,12 @@ KeyboardLayouts.prototype.handleEvent = function(evt) {
   var value = evt.target.checked;
 
   if (!value) {
+    if (this.enabledLayouts.length === 1) {
+      evt.target.checked = true;
+
+      return;
+    }
+
     var index = this.enabledLayouts.indexOf(key);
     this.enabledLayouts.splice(index, 1);
 
