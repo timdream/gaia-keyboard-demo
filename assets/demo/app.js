@@ -125,10 +125,15 @@ KeyboardDemoApp.prototype.postMessage = function(data) {
 KeyboardDemoApp.prototype.handleEvent = function(evt) {
   switch (evt.type) {
     case 'hashchange':
+      var hash = window.location.hash.substr(1);
+      if (!hash || !this.layouts.layouts.has(hash)) {
+        break;
+      }
+
       this.postMessage({
         api: 'api',
         method: 'updateHash',
-        result: window.location.hash.substr(1) || this.DEFAULT_LAYOUT_HASH
+        result: hash
       });
 
       break;
