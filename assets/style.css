@@ -40,6 +40,10 @@
   pointer-events: none;
 }
 
+#layout-selection-list {
+  font-size: 140%;
+}
+
 #keyboard-app-container {
   width: 100%;
   height: 100%;

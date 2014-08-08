@@ -2,6 +2,69 @@
 
 (function(exports) {
 
+var LayoutSelectionDialog = function() {
+};
+
+LayoutSelectionDialog.prototype.LAYOUT_SELECTION_DIALOG =
+  'layout-selection-dialog';
+LayoutSelectionDialog.prototype.LAYOUT_SELECTION_CANCEL =
+  'layout-selection-cancel';
+LayoutSelectionDialog.prototype.LAYOUT_SELECTION_LIST =
+  'layout-selection-list';
+
+LayoutSelectionDialog.prototype.start = function() {
+  this.layoutSelectionDialog =
+    document.getElementById(this.LAYOUT_SELECTION_DIALOG);
+  this.layoutSelectionCancel =
+    document.getElementById(this.LAYOUT_SELECTION_CANCEL);
+  this.layoutSelectionList =
+    document.getElementById(this.LAYOUT_SELECTION_LIST);
+
+  this.layoutSelectionCancel.addEventListener('click', this);
+  this.layoutSelectionList.addEventListener('click', this);
+};
+
+LayoutSelectionDialog.prototype.handleEvent = function(evt) {
+  switch (evt.type) {
+    case 'click':
+      this.hide();
+      break;
+  }
+};
+
+LayoutSelectionDialog.prototype.show = function(list, currentLayout) {
+  this._updateList(list, currentLayout);
+  this.layoutSelectionDialog.classList.add('show');
+};
+
+LayoutSelectionDialog.prototype.hide = function() {
+  this.layoutSelectionDialog.classList.remove('show');
+};
+
+LayoutSelectionDialog.prototype._updateList = function(list, currentLayout) {
+  var template = (function() {
+    var a = document.createElement('a');
+    a.className = 'list-group-item';
+    a.dir = 'auto';
+
+    return a;
+  })();
+
+  this.layoutSelectionList.textContent = '';
+
+  list.forEach(function(label, id) {
+    var node = template.cloneNode(true);
+    node.href = '#' + id;
+    node.textContent = label;
+
+    if (id === currentLayout) {
+      node.classList.add('active');
+    }
+
+    this.layoutSelectionList.appendChild(node);
+  }, this);
+};
+
 var KeyboardLayouts = function(app) {
   this.app = app;
 
@@ -82,6 +145,9 @@ KeyboardLayouts.prototype.start = function() {
   this.settingsMenu.addEventListener('click', this);
 
   this._populateSettingsMenu();
+
+  this.selectionDialog = new LayoutSelectionDialog(this);
+  this.selectionDialog.start();
 };
 
 KeyboardLayouts.prototype.handleEvent = function(evt) {
@@ -121,6 +187,15 @@ KeyboardLayouts.prototype.handleEvent = function(evt) {
   });
 };
 
+KeyboardLayouts.prototype.updateCurrentLayout = function(id) {
+  if (!this.layouts.has(id)) {
+    return false;
+  }
+
+  this.currentLayout = id;
+  return true;
+};
+
 KeyboardLayouts.prototype.switchToNext = function() {
   var index = this.enabledLayouts.indexOf(this.currentLayout);
   if (index === -1) {
@@ -136,6 +211,15 @@ KeyboardLayouts.prototype.switchToNext = function() {
   this.currentLayout = this.enabledLayouts[index];
 
   window.location.hash = '#' + this.currentLayout;
+};
+
+KeyboardLayouts.prototype.showSelectionDialog = function() {
+  var enabledLayoutsMap = new Map();
+  this.enabledLayouts.forEach(function(id) {
+    enabledLayoutsMap.set(id, this.layouts.get(id));
+  }, this);
+
+  this.selectionDialog.show(enabledLayoutsMap, this.currentLayout);
 };
 
 KeyboardLayouts.prototype._populateSettingsMenu = function() {

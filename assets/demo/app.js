@@ -126,7 +126,8 @@ KeyboardDemoApp.prototype.handleEvent = function(evt) {
   switch (evt.type) {
     case 'hashchange':
       var hash = window.location.hash.substr(1);
-      if (!hash || !this.layouts.layouts.has(hash)) {
+      var changed = this.layouts.updateCurrentLayout(hash);
+      if (!changed) {
         break;
       }
 

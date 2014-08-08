@@ -156,8 +156,7 @@ InputMethodHandler.prototype.handleInputContextMessage = function(data) {
 InputMethodHandler.prototype.handleInputMethodManagerMessage = function(data) {
   switch (data.method) {
     case 'showAll':
-      alert('Show all enabled layouts is not implemented yet.\n' +
-        'Change the URL hash to switch layout.');
+      this.app.layouts.showSelectionDialog();
 
       break;
 
