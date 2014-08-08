@@ -162,8 +162,7 @@ InputMethodHandler.prototype.handleInputMethodManagerMessage = function(data) {
       break;
 
     case 'next':
-      alert('Switch to next enabled layouts is not implemented yet.\n' +
-        'Change the URL hash to switch layout.');
+      this.app.layouts.switchToNext();
 
       break;
 

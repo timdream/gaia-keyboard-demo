@@ -50,7 +50,7 @@ KeyboardAppStarter.prototype.handleEvent = function(evt) {
 
   switch (data.method) {
     case 'updateHash':
-      window.location.hash = '#' + data.result;
+      window.location.replace('#' + data.result);
 
       break;
   }

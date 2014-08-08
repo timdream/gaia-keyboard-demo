@@ -49,14 +49,8 @@ KeyboardDemoApp.prototype.INPUTAREA_ELEMENT_ID = 'inputarea';
 KeyboardDemoApp.prototype.GAIA_APP_DIR = './gaia/apps/keyboard';
 KeyboardDemoApp.prototype.CONTAINER_ID = 'keyboard-app-container';
 
-KeyboardDemoApp.prototype.DEFAULT_LAYOUT_HASH = 'en';
-
 KeyboardDemoApp.prototype.start = function() {
   this.container = document.getElementById(this.CONTAINER_ID);
-
-  var hash = window.location.hash.substr(1) || this.DEFAULT_LAYOUT_HASH;
-  this.container.src =
-    'app.html#' + this.GAIA_APP_DIR + '/index.html#' + hash;
 
   this.settingsHandler = new SettingsHandler(this);
   this.settingsHandler.start();
@@ -67,11 +61,18 @@ KeyboardDemoApp.prototype.start = function() {
   this.configDialog = new ConfigDialog(this);
   this.configDialog.start();
 
+  this.layouts = new KeyboardLayouts(this);
+  this.layouts.start();
+
   window.addEventListener('message', this);
   window.addEventListener('hashchange', this);
 
   this.inputarea = document.getElementById(this.INPUTAREA_ELEMENT_ID);
   this.inputarea.addEventListener('mousedown', this);
+
+  var hash = this.layouts.currentLayout;
+  this.container.src =
+    'app.html#' + this.GAIA_APP_DIR + '/index.html#' + hash;
 
   this.focused = true;
 };
