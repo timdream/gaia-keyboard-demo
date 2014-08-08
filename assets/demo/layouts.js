@@ -2,7 +2,9 @@
 
 (function(exports) {
 
-var KeyboardLayouts = function() {
+var KeyboardLayouts = function(app) {
+  this.app = app;
+
   /* The default set of layouts to enable is selected based on being able
     to show case the diversity of the feature the keyboard app
     and IMEngine provided. */
@@ -93,9 +95,24 @@ KeyboardLayouts.prototype.handleEvent = function(evt) {
   if (!value) {
     var index = this.enabledLayouts.indexOf(key);
     this.enabledLayouts.splice(index, 1);
+
+    if (this.currentLayout === key) {
+      if (this.enabledLayouts.indexOf(this.DEFAULT_LAYOUT) !== -1) {
+        this.currentLayout = this.DEFAULT_LAYOUT;
+      } else {
+        this.currentLayout = this.enabledLayouts[0];
+      }
+
+      window.location.hash = '#' + this.currentLayout;
+    }
   } else {
     this.enabledLayouts = [key].concat(this.enabledLayouts).sort();
   }
+
+  this.app.postMessage({
+    api: 'inputmethodmanager',
+    result: (this.enabledLayouts.length > 1)
+  });
 };
 
 KeyboardLayouts.prototype.switchToNext = function() {
