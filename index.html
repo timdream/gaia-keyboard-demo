@@ -52,11 +52,66 @@
     </div>
   </div>
   <div class="container">
-    <p class="lead"><strong>Gaia Keyboard</strong> is a touchscreen keyboard implemented for <strong>Mozilla Firefox OS</strong>.</p>
-    <div id="inputarea" class="focused well well-sm">
+    <p class="lead">
+      <button id="config-btn" class="pull-right btn btn-default"><span class="glyphicon glyphicon-wrench"></span></button>
+      <strong>Gaia Keyboard</strong> is a touchscreen keyboard implemented for <strong>Mozilla Firefox OS</strong>.</p>
+    <div id="inputarea" dir="auto" class="focused well well-sm">
       <span id="inputtext"></span><span id="composition"></span>
     </div>
   </div>
   <iframe id="keyboard-app-container" class="transitioned-out" sandbox="allow-scripts allow-same-origin"></iframe>
+
+  <div id="config-dialog" class="modal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Keyboard Preferences</h4>
+        </div>
+        <div class="modal-body">
+          <h5>General Options</h5>
+          <hr>
+
+          <form role="form">
+            <div class="form-group">
+              <div class="checkbox">
+                <label>
+                  <input type="checkbox" data-setting-id="keyboard.vibration"> Vibration
+                </label>
+                <span class="help-block">Might not be available in your browser.</span>
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="checkbox">
+                <label>
+                  <input type="checkbox" data-setting-id="keyboard.clicksound"> Click sound
+                </label>
+                <span class="help-block">Might not be available in your browser.</span>
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="checkbox">
+                <label>
+                  <input type="checkbox" data-setting-id="keyboard.autocorrect"> Auto correction
+                </label>
+                <span class="help-block">Not available for all languages.</span>
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="checkbox">
+                <label>
+                  <input type="checkbox" data-setting-id="keyboard.wordsuggestion"> Word suggestion
+                </label>
+                <span class="help-block">Not available for all languages.</span>
+              </div>
+            </div>
+          </form>
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" id="config-close" class="btn btn-primary">Close</button>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
 </body>
 </html>

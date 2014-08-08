@@ -20,6 +20,7 @@ KeyboardAppStarter.prototype.start = function() {
 
 KeyboardAppStarter.prototype._startAPI = function() {
   navigator.mozSettings = new NavigatorMozSettings();
+  navigator.mozSettings.start();
 
   navigator.mozInputMethod = new InputMethod();
   navigator.mozInputMethod.start();

@@ -24,6 +24,29 @@ NavigatorMozSettings.prototype = new MockEventTarget();
 
 NavigatorMozSettings.prototype.onsettingchange = null;
 
+NavigatorMozSettings.prototype.start = function() {
+  window.addEventListener('message', this);
+};
+
+NavigatorMozSettings.prototype.stop = function() {
+  window.removeEventListener('message', this);
+};
+
+NavigatorMozSettings.prototype.handleEvent = function(evt) {
+  var data = evt.data;
+
+  if (data.api !== 'settings' || !('method' in data)) {
+    return;
+  }
+
+  switch (data.method) {
+    case 'dispatchSettingChange':
+      this.dispatchSettingChange(data.key, data.value);
+
+      break;
+  }
+};
+
 // This function returns a mocked lock object.
 // to spy/stub the methods of the returned lock before this method is called,
 // stub this method and return your own lock with spy/stub methods.

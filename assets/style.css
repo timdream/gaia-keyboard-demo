@@ -31,6 +31,15 @@
   }
 }
 
+#config-btn {
+  position: relative;
+  z-index: 1000;
+}
+
+#config-btn > * {
+  pointer-events: none;
+}
+
 #keyboard-app-container {
   width: 100%;
   height: 100%;

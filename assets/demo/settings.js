@@ -16,6 +16,41 @@ SettingsHandler.prototype.start = function() {
   // Turn off sound feedback if this platform does not support audio.
   var canPlayOgg = (new Audio()).canPlayType('audio/ogg');
   this.settings.set('keyboard.clicksound', !!canPlayOgg);
+
+  window.addEventListener('click', this);
+
+  if (!canPlayOgg) {
+    var el = document.querySelector('[data-setting-id="keyboard.clicksound"]');
+    if (el) {
+      el.disabled = true;
+    }
+  }
+
+  this.settings.forEach(function(value, key) {
+    var el = document.querySelector('[data-setting-id="' + key + '"]');
+    if (!el) {
+      return;
+    }
+
+    el.checked = value;
+  }, this);
+};
+
+SettingsHandler.prototype.handleEvent = function(evt) {
+  if (!('settingId' in evt.target.dataset)) {
+    return;
+  }
+
+  var key = evt.target.dataset.settingId;
+  var value = evt.target.checked;
+  this.settings.set(key, value);
+
+  this.app.postMessage({
+    api: 'settings',
+    method: 'dispatchSettingChange',
+    key: key,
+    value: value
+  })
 };
 
 SettingsHandler.prototype.handleMessage = function(data) {

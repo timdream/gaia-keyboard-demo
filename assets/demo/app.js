@@ -2,6 +2,45 @@
 
 (function(exports) {
 
+var ConfigDialog = function(app) {
+  this.app = app;
+};
+
+ConfigDialog.prototype.CONFIG_DIALOG_ELEMENT_ID = 'config-dialog';
+ConfigDialog.prototype.CONFIG_BTN_ELEMENT_ID = 'config-btn';
+ConfigDialog.prototype.CONFIG_CLOSE_ELEMENT_ID = 'config-close';
+
+ConfigDialog.prototype.start = function() {
+  this.configBtn = document.getElementById(this.CONFIG_BTN_ELEMENT_ID);
+  this.configDialog = document.getElementById(this.CONFIG_DIALOG_ELEMENT_ID);
+  this.configClose = document.getElementById(this.CONFIG_CLOSE_ELEMENT_ID);
+
+  this.configClose.addEventListener('click', this);
+  this.configBtn.addEventListener('click', this);
+};
+
+ConfigDialog.prototype.handleEvent = function(evt) {
+  switch (evt.target) {
+    case this.configBtn:
+      this.app.removeFocus();
+
+      window.requestAnimationFrame(function() {
+        this.configDialog.classList.add('show');
+      }.bind(this));
+
+      break;
+
+    case this.configClose:
+      this.app.getFocus();
+
+      window.requestAnimationFrame(function() {
+        this.configDialog.classList.remove('show');
+      }.bind(this));
+
+      break;
+  }
+};
+
 var KeyboardDemoApp = function() {
   this.container = null;
 };
@@ -24,6 +63,9 @@ KeyboardDemoApp.prototype.start = function() {
 
   this.inputMethodHandler = new InputMethodHandler(this);
   this.inputMethodHandler.start();
+
+  this.configDialog = new ConfigDialog(this);
+  this.configDialog.start();
 
   window.addEventListener('message', this);
   window.addEventListener('hashchange', this);
@@ -69,6 +111,7 @@ KeyboardDemoApp.prototype.removeFocus = function() {
   });
   this.focused = false;
   window.requestAnimationFrame(function() {
+    document.body.style.paddingBottom = '';
     this.container.classList.add('transitioned-out');
     this.inputarea.classList.remove('focused');
   }.bind(this));
@@ -116,8 +159,11 @@ KeyboardDemoApp.prototype.handleMessage = function(data) {
       break;
 
     case 'resizeTo':
-      document.body.style.paddingBottom = data.args[1] + 'px';
+      if (!this.focused) {
+        return;
+      }
       window.requestAnimationFrame(function() {
+        document.body.style.paddingBottom = data.args[1] + 'px';
         this.container.classList.remove('transitioned-out');
       }.bind(this));
 
