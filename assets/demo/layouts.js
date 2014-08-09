@@ -2,13 +2,16 @@
 
 (function(exports) {
 
-var LayoutSelectionDialog = function() {
+var LayoutSelectionDialog = function(app) {
+  this.app = app;
 };
 
 LayoutSelectionDialog.prototype.LAYOUT_SELECTION_DIALOG =
   'layout-selection-dialog';
 LayoutSelectionDialog.prototype.LAYOUT_SELECTION_CANCEL =
   'layout-selection-cancel';
+LayoutSelectionDialog.prototype.LAYOUT_SELECTION_CONFIG =
+  'layout-selection-config';
 LayoutSelectionDialog.prototype.LAYOUT_SELECTION_LIST =
   'layout-selection-list';
 
@@ -17,17 +20,23 @@ LayoutSelectionDialog.prototype.start = function() {
     document.getElementById(this.LAYOUT_SELECTION_DIALOG);
   this.layoutSelectionCancel =
     document.getElementById(this.LAYOUT_SELECTION_CANCEL);
+  this.layoutSelectionConfig =
+    document.getElementById(this.LAYOUT_SELECTION_CONFIG);
   this.layoutSelectionList =
     document.getElementById(this.LAYOUT_SELECTION_LIST);
 
   this.layoutSelectionCancel.addEventListener('click', this);
+  this.layoutSelectionConfig.addEventListener('click', this);
   this.layoutSelectionList.addEventListener('click', this);
 };
 
 LayoutSelectionDialog.prototype.handleEvent = function(evt) {
-  switch (evt.type) {
-    case 'click':
-      this.hide();
+  this.hide();
+
+  switch (evt.target) {
+    case this.layoutSelectionConfig:
+      this.app.configDialog.show();
+
       break;
   }
 };
@@ -146,7 +155,7 @@ KeyboardLayouts.prototype.start = function() {
 
   this._populateSettingsMenu();
 
-  this.selectionDialog = new LayoutSelectionDialog(this);
+  this.selectionDialog = new LayoutSelectionDialog(this.app);
   this.selectionDialog.start();
 };
 

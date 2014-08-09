@@ -22,23 +22,27 @@ ConfigDialog.prototype.start = function() {
 ConfigDialog.prototype.handleEvent = function(evt) {
   switch (evt.target) {
     case this.configBtn:
-      this.app.removeFocus();
-
-      window.requestAnimationFrame(function() {
-        this.configDialog.classList.add('show');
-      }.bind(this));
+      this.show();
 
       break;
 
     case this.configClose:
-      this.app.getFocus();
-
-      window.requestAnimationFrame(function() {
-        this.configDialog.classList.remove('show');
-      }.bind(this));
+      this.hide();
 
       break;
   }
+};
+
+ConfigDialog.prototype.show = function() {
+  this.configDialog.classList.add('show');
+
+  window.requestAnimationFrame(this.app.removeFocus.bind(this));
+};
+
+ConfigDialog.prototype.hide = function() {
+  this.configDialog.classList.remove('show');
+
+  window.requestAnimationFrame(this.app.getFocus.bind(this));
 };
 
 var KeyboardDemoApp = function() {
