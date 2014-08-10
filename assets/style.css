@@ -31,6 +31,37 @@
   }
 }
 
+.modal-dialog {
+  height: 100%;
+}
+
+.modal-content {
+  height: 100%;
+
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-flow: column nowrap;
+  flex-flow: column nowrap;
+}
+
+.modal-body {
+  /* Workaround iOS scrolling perfromance issue */
+  overflow-y: scroll; /* has to be scroll, not auto */
+  -webkit-overflow-scrolling: touch;
+}
+
+.modal-footer {
+  margin-top: 0;
+
+  -webkit-flex: 1 0 70px;
+  flex: 1 0 70px;
+}
+
+.checkbox label {
+  display: inline-block;
+  width: 100%;
+}
+
 #config-btn {
   position: relative;
   z-index: 1000;

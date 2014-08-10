@@ -44,6 +44,8 @@ LayoutSelectionDialog.prototype.handleEvent = function(evt) {
 LayoutSelectionDialog.prototype.show = function(list, currentLayout) {
   this._updateList(list, currentLayout);
   this.layoutSelectionDialog.classList.add('show');
+  this.layoutSelectionDialog
+    .firstElementChild.firstElementChild.firstElementChild.scrollTop = 0;
 };
 
 LayoutSelectionDialog.prototype.hide = function() {

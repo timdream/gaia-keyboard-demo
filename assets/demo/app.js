@@ -35,14 +35,16 @@ ConfigDialog.prototype.handleEvent = function(evt) {
 
 ConfigDialog.prototype.show = function() {
   this.configDialog.classList.add('show');
+  this.configDialog
+    .firstElementChild.firstElementChild.firstElementChild.scrollTop = 0;
 
-  window.requestAnimationFrame(this.app.removeFocus.bind(this));
+  window.requestAnimationFrame(this.app.removeFocus.bind(this.app));
 };
 
 ConfigDialog.prototype.hide = function() {
   this.configDialog.classList.remove('show');
 
-  window.requestAnimationFrame(this.app.getFocus.bind(this));
+  window.requestAnimationFrame(this.app.getFocus.bind(this.app));
 };
 
 var KeyboardDemoApp = function() {
