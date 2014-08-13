@@ -81,6 +81,12 @@ KeyboardDemoApp.prototype.start = function() {
     'app.html#' + this.GAIA_APP_DIR + '/index.html#' + hash;
 
   this.focused = true;
+
+  var mobileNav = document.getElementById('mobile-nav');
+  mobileNav.selectedIndex = 0;
+  mobileNav.addEventListener('change', function(evt) {
+    window.location.href = mobileNav.value;
+  });
 };
 
 KeyboardDemoApp.prototype.getFocus = function() {
