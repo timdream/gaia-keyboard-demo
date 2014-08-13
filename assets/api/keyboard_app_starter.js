@@ -71,6 +71,12 @@ KeyboardAppStarter.prototype._replaceAppendChild = function() {
   document.documentElement.firstElementChild.appendChild = function(node) {
     switch (node.nodeName) {
       case 'SCRIPT':
+        // Reject l10n.js request --
+        // it doesn't work without running build script
+        if (/l10n\.js$/.test(node.src)) {
+          return;
+        };
+
         node.src += '?_=' + app.CACHE_BUSTING_HASH;
         break;
 
