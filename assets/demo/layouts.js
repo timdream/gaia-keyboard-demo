@@ -95,6 +95,7 @@ var KeyboardLayouts = function(app) {
   layouts.set('bg-Pho-Trad', 'Български (Фонетична)');
   layouts.set('bn-Avro', 'বাংলা - অভ্র');
   layouts.set('bn-Probhat', 'বাংলা - প্রভাত');
+  layouts.set('bs', 'Bosanski');
   layouts.set('ca', 'Català');
   layouts.set('cs', 'Česká');
   layouts.set('da', 'Dansk');
