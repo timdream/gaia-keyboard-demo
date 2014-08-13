@@ -6,6 +6,12 @@ var KeyboardAppStarter = function() {
   this._started = false;
 };
 
+// Since the app scripts are dynamic injected, Ctrl+F5 will not clean it up.
+// We therefore employ cache busting here by replacing the native appendChild
+// methods under <head> and <body>.
+// This hash is the Gaia commit hash included in submodule.
+KeyboardAppStarter.prototype.CACHE_BUSTING_HASH = '1723f2b';
+
 KeyboardAppStarter.prototype.start = function() {
   window.history.replaceState(null, '', window.location.hash.substr(1));
 
@@ -16,6 +22,7 @@ KeyboardAppStarter.prototype.start = function() {
   window.addEventListener('message', this);
 
   this._startAPI();
+  this._replaceAppendChild();
 };
 
 KeyboardAppStarter.prototype._startAPI = function() {
@@ -56,6 +63,26 @@ KeyboardAppStarter.prototype.handleEvent = function(evt) {
   }
 };
 
+KeyboardAppStarter.prototype._replaceAppendChild = function() {
+  var nativeAppendChild = document.body.appendChild;
+  var app = this;
+
+  document.body.appendChild =
+  document.documentElement.firstElementChild.appendChild = function(node) {
+    switch (node.nodeName) {
+      case 'SCRIPT':
+        node.src += '?_=' + app.CACHE_BUSTING_HASH;
+        break;
+
+      case 'LINK':
+        node.href += '?_=' + app.CACHE_BUSTING_HASH;
+        break;
+    }
+
+    return nativeAppendChild.call(this, node);
+  };
+};
+
 KeyboardAppStarter.prototype._getIndexHTMLContent = function() {
   return new Promise(function(resolve, reject) {
     var xhr = new XMLHttpRequest();
@@ -73,7 +100,8 @@ KeyboardAppStarter.prototype._getIndexHTMLContent = function() {
 
 KeyboardAppStarter.prototype._prepareDOM = function(sourceDoc) {
   // Clean up the document.
-  document.documentElement.innerHTML = '';
+  document.documentElement.firstElementChild.innerHTML = '';
+  document.body.innerHTML = '';
 
   var destHeadNode = document.documentElement.firstElementChild;
 
