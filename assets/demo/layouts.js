@@ -111,6 +111,9 @@ var KeyboardLayouts = function(app) {
   layouts.set('ff', 'Pulaar-Fulfulde');
   layouts.set('fr-Dvorak-bepo', 'Bépo');
   layouts.set('fr', 'Français');
+  layouts.set('ga', 'Gaeilge');
+  layouts.set('gd', 'Gàidhlig');
+  layouts.set('gv', 'Gaelg');
   layouts.set('he', 'עִבְרִית');
   layouts.set('hi', 'हिन्दी');
   layouts.set('hr', 'Hrvatski');
