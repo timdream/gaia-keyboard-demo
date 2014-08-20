@@ -201,6 +201,8 @@ InputMethodHandler.prototype._handleInput = function(job, str, offset, length) {
           lastChild.textContent = text.replace(/ /g, String.fromCharCode(0xA0))
             .replace(/\xA0(\S)/g, function(m0, m1) { return ' ' + m1; });
         }
+
+        this.composition.scrollIntoView();
       }.bind(this));
 
       break;
@@ -210,7 +212,8 @@ InputMethodHandler.prototype._handleInput = function(job, str, offset, length) {
 
       window.requestAnimationFrame(function() {
         container.appendChild(document.createElement('br'));
-        window.scrollBy(0, 20);
+
+        this.composition.scrollIntoView();
       }.bind(this));
 
       break;
@@ -258,6 +261,8 @@ InputMethodHandler.prototype._handleInput = function(job, str, offset, length) {
         lastChild.textContent =
           resultTextContent.replace(/ /g, String.fromCharCode(0xA0))
             .replace(/\xA0(\S)/g, function(m0, m1) { return ' ' + m1; });
+
+        this.composition.scrollIntoView();
       }.bind(this));
 
       break;
