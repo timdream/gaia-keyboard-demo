@@ -10,7 +10,7 @@ var KeyboardAppStarter = function() {
 // We therefore employ cache busting here by replacing the native appendChild
 // methods under <head> and <body>.
 // This hash is the Gaia commit hash included in submodule.
-KeyboardAppStarter.prototype.CACHE_BUSTING_HASH = '7a49a7c';
+KeyboardAppStarter.prototype.CACHE_BUSTING_HASH = '32b849d';
 
 KeyboardAppStarter.prototype.start = function() {
   window.history.replaceState(null, '', window.location.hash.substr(1));
@@ -69,19 +69,26 @@ KeyboardAppStarter.prototype._replaceAppendChild = function() {
 
   document.body.appendChild =
   document.documentElement.firstElementChild.appendChild = function(node) {
+    var url;
+
     switch (node.nodeName) {
       case 'SCRIPT':
         // Reject l10n.js request --
         // it doesn't work without running build script
         if (/l10n\.js$/.test(node.src)) {
           return;
-        };
+        }
 
-        node.src += '?_=' + app.CACHE_BUSTING_HASH;
+        url = node.src.replace(/apps\/keyboard\/shared/, 'shared');
+
+        node.src = url + '?_=' + app.CACHE_BUSTING_HASH;
         break;
 
       case 'LINK':
-        node.href += '?_=' + app.CACHE_BUSTING_HASH;
+        // Redirect shared CSS
+        url = node.href.replace(/apps\/keyboard\/shared/, 'shared');
+
+        node.href = url + '?_=' + app.CACHE_BUSTING_HASH;
         break;
     }
 
