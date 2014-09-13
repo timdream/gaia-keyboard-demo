@@ -10,7 +10,7 @@ var KeyboardAppStarter = function() {
 // We therefore employ cache busting here by replacing the native appendChild
 // methods under <head> and <body>.
 // This hash is the Gaia commit hash included in submodule.
-KeyboardAppStarter.prototype.CACHE_BUSTING_HASH = '32b849d';
+KeyboardAppStarter.prototype.CACHE_BUSTING_HASH = '76293cc';
 
 KeyboardAppStarter.prototype.start = function() {
   window.history.replaceState(null, '', window.location.hash.substr(1));
@@ -42,6 +42,14 @@ KeyboardAppStarter.prototype._startAPI = function() {
   if (!('vibrate' in navigator)) {
     navigator.vibrate = function() { };
   };
+
+  if (!('performance' in window)) {
+    window.performance = {
+      timing: {
+      },
+      now: function() { }
+    };
+  }
 
   if (!exports.WeakMap) {
     exports.WeakMap = exports.Map;
