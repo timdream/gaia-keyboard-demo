@@ -6,8 +6,8 @@ This is a off-work fun project to bring the built-in keyboard of [Mozilla Firefo
 
 Clone this repo, and execute the following commands:
 
-* $ git submodule init
-* $ git submodule update
+    git submodule init
+    git submodule update
 
 ## Underneath
 
