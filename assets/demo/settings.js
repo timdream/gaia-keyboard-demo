@@ -13,13 +13,14 @@ var SettingsHandler = function(app) {
 };
 
 SettingsHandler.prototype.start = function() {
-  // Turn off sound feedback if this platform does not support audio.
-  var canPlayOgg = (new Audio()).canPlayType('audio/ogg');
-  this.settings.set('keyboard.clicksound', !!canPlayOgg);
+  // Turn off sound feedback if this platform does not
+  // support LPCM WAV audio file, which is the current file we are using.
+  var canPlayWav = (new Audio()).canPlayType('audio/wav; codecs="1"');
+  this.settings.set('keyboard.clicksound', !!canPlayWav);
 
   window.addEventListener('click', this);
 
-  if (!canPlayOgg) {
+  if (!canPlayWav) {
     var el = document.querySelector('[data-setting-id="keyboard.clicksound"]');
     if (el) {
       el.disabled = true;
