@@ -163,7 +163,8 @@
     if (data.method) {
       switch (data.method) {
         case 'updateSelectionContext':
-          this._updateSelectionContext(data.result);
+          this._updateSelectionContext(data.result.selectionInfo,
+                                       data.result.ownAction);
 
           break;
       }
@@ -208,7 +209,7 @@
     return p;
   };
 
-  InputContext.prototype._updateSelectionContext = function(ctx) {
+  InputContext.prototype._updateSelectionContext = function(ctx, ownAction) {
     var selectionDirty = this.selectionStart !== ctx.selectionStart ||
           this.selectionEnd !== ctx.selectionEnd;
     var surroundDirty = this.textBeforeCursor !== ctx.textBeforeCursor ||
@@ -220,32 +221,34 @@
     this.textAfterCursor = ctx.textAfterCursor;
 
     if (selectionDirty) {
-      this.fireSelectionChange();
+      this.fireSelectionChange(ownAction);
     }
 
     if (surroundDirty) {
-      this.fireSurroundingTextChange();
+      this.fireSurroundingTextChange(ownAction);
     }
   };
 
-  InputContext.prototype.fireSurroundingTextChange = function() {
+  InputContext.prototype.fireSurroundingTextChange = function(ownAction) {
     var evt = {
       type: 'surroundingtextchange',
       detail: {
         beforeString: this.textBeforeCursor,
-        afterString: this.textAfterCursor
+        afterString: this.textAfterCursor,
+        ownAction: ownAction
       }
     };
 
     this.dispatchEvent(evt);
   };
 
-  InputContext.prototype.fireSelectionChange = function() {
+  InputContext.prototype.fireSelectionChange = function(ownAction) {
     var evt = {
       type: 'selectionchange',
       detail: {
         selectionStart: this.selectionStart,
-        selectionEnd: this.selectionEnd
+        selectionEnd: this.selectionEnd,
+        ownAction: ownAction
       }
     };
 

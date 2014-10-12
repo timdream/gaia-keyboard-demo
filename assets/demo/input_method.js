@@ -46,8 +46,6 @@ InputMethodHandler.prototype.handleInputContextMessage = function(data) {
         result: text
       });
 
-      this._updateSelectionContext();
-
       break;
 
     case 'sendKey':
@@ -73,34 +71,36 @@ InputMethodHandler.prototype.handleInputContextMessage = function(data) {
         }
       }
 
+      this._updateSelectionContext();
+
       this.app.postMessage({
         api: data.api,
         contextId: data.contextId,
         id: data.id,
         result: ''
       });
-
-      this._updateSelectionContext();
 
       break;
 
     case 'replaceSurroundingText':
       this._handleInput('replace', data.args[0], data.args[1], data.args[2]);
 
+      this._updateSelectionContext();
+
       this.app.postMessage({
         api: data.api,
         contextId: data.contextId,
         id: data.id,
         result: this.getSelectionInfo()
       });
-
-      this._updateSelectionContext();
 
       break;
 
     case 'deleteSurroundingText':
       this._handleInput('replace', '', data.args[0], data.args[1]);
 
+      this._updateSelectionContext();
+
       this.app.postMessage({
         api: data.api,
         contextId: data.contextId,
@@ -108,12 +108,12 @@ InputMethodHandler.prototype.handleInputContextMessage = function(data) {
         result: this.getSelectionInfo()
       });
 
-      this._updateSelectionContext();
-
       break;
 
     case 'setComposition':
       this._handleInput('updateComposition', data.args[0]);
+
+      this._updateSelectionContext();
 
       this.app.postMessage({
         api: data.api,
@@ -121,22 +121,20 @@ InputMethodHandler.prototype.handleInputContextMessage = function(data) {
         id: data.id,
         result: ''
       });
-
-      this._updateSelectionContext();
 
       break;
 
     case 'endComposition':
       this._handleInput('append', data.args[0]);
 
+      this._updateSelectionContext();
+
       this.app.postMessage({
         api: data.api,
         contextId: data.contextId,
         id: data.id,
         result: ''
       });
-
-      this._updateSelectionContext();
 
       break;
 
@@ -291,7 +289,13 @@ InputMethodHandler.prototype._updateSelectionContext = function() {
   this.app.postMessage({
     api: 'inputcontext',
     method: 'updateSelectionContext',
-    result: this.getSelectionInfo()
+    result: {
+      selectionInfo: this.getSelectionInfo(),
+      // Our implementation does not currently allow user to change
+      // selection or text on the fake input,
+      // therefore all events should have ownAction set to true.
+      ownAction: true
+    }
   });
 };
 
