@@ -8,3 +8,12 @@ html {
   -moz-user-select: none;
   -webkit-tap-highlight-color: transparent;
 }
+
+#keyboard-accent-char-menu {
+  /* Special hack to make the keys in the menu flow upwards. */
+  -webkit-transform: rotateX(180deg);
+}
+
+#keyboard-accent-char-menu .keyboard-key {
+  -webkit-transform: rotateX(180deg);
+}
