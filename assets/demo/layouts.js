@@ -116,6 +116,7 @@ var KeyboardLayouts = function(app) {
   layouts.set('fr-CA', 'Français (Canadien)');
   layouts.set('ga', 'Gaeilge');
   layouts.set('gd', 'Gàidhlig');
+  layouts.set('gl', 'Galego');
   layouts.set('gv', 'Gaelg');
   layouts.set('he', 'עִבְרִית');
   layouts.set('hi', 'हिन्दी');
