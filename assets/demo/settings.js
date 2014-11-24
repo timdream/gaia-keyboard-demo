@@ -16,11 +16,14 @@ SettingsHandler.prototype.start = function() {
   // Turn off sound feedback if this platform does not
   // support LPCM WAV audio file, which is the current file we are using.
   var canPlayWav = (new Audio()).canPlayType('audio/wav; codecs="1"');
-  this.settings.set('keyboard.clicksound', !!canPlayWav);
+  var hasWebAudio = (typeof AudioContext !== 'undefined') ||
+    (typeof webkitAudioContext !== 'undefined');
+
+  this.settings.set('keyboard.clicksound', !!canPlayWav && hasWebAudio);
 
   window.addEventListener('click', this);
 
-  if (!canPlayWav) {
+  if (!canPlayWav || !hasWebAudio) {
     var el = document.querySelector('[data-setting-id="keyboard.clicksound"]');
     if (el) {
       el.disabled = true;

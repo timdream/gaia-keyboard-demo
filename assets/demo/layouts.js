@@ -98,6 +98,7 @@ var KeyboardLayouts = function(app) {
   layouts.set('bs', 'Bosanski');
   layouts.set('ca', 'Català');
   layouts.set('cs', 'Česká');
+  layouts.set('cs-qwerty', 'Česká (QWERTY)');
   layouts.set('da', 'Dansk');
   layouts.set('de', 'Deutsch');
   layouts.set('dz-BT', 'རྫོང་ཁ');
@@ -126,6 +127,7 @@ var KeyboardLayouts = function(app) {
   layouts.set('jp-kanji', 'Japanese - Kanji');
   layouts.set('ko', '한국어');
   layouts.set('lt', 'Lietuvių');
+  layouts.set('lv', 'Latviešu');
   layouts.set('mk', 'Македонски');
   layouts.set('my', '\u1019\u103C\u1014\u103A\u1019\u102C'); /*မြန်မာ*/
   layouts.set('nb', 'Norsk');
@@ -146,6 +148,7 @@ var KeyboardLayouts = function(app) {
   layouts.set('vi-Qwerty', 'Tiếng Việt (QWERTY)');
   layouts.set('vi-Telex', 'Tiếng Việt (Telex)');
   layouts.set('vi-Typewriter', 'Tiếng Việt');
+  layouts.set('zh-Hans-Handwriting', '手写简体');
   layouts.set('zh-Hans-Pinyin', '拼音');
   layouts.set('zh-Hant-Zhuyin', '注音');
 };
