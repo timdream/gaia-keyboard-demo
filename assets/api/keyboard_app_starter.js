@@ -57,6 +57,16 @@ KeyboardAppStarter.prototype._startAPI = function() {
 
   if (!exports.WeakMap) {
     exports.WeakMap = exports.Map;
+  } else if (navigator.userAgent.indexOf('Safari') !== -1) {
+    // Workarounds broken WeakMap implementation in JavaScriptCode
+    // See https://bugs.webkit.org/show_bug.cgi?id=137651
+    var weakMapPrototypeSet = exports.WeakMap.prototype.set;
+    exports.WeakMap.prototype.set = function(key, val) {
+      if (key instanceof HTMLElement) {
+        key.webkitWeakMapWorkaround = 1;
+      }
+      weakMapPrototypeSet.call(this, key, val);
+    };
   }
 };
 
