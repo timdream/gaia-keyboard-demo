@@ -31,6 +31,11 @@
   }
 }
 
+input.form-control[type="range"] {
+  border: none;
+  box-shadow: none;
+}
+
 .modal-dialog {
   height: 100%;
 }

@@ -10,6 +10,8 @@ var SettingsHandler = function(app) {
   this.settings.set('keyboard.autocorrect', true);
   this.settings.set('keyboard.vibration', true);
   this.settings.set('audio.volume.notification', 10);
+  this.settings.set('keyboard.handwriting.strokeWidth', 10);
+  this.settings.set('keyboard.handwriting.responseTime', 500);
 };
 
 SettingsHandler.prototype.start = function() {
@@ -36,7 +38,16 @@ SettingsHandler.prototype.start = function() {
       return;
     }
 
-    el.checked = value;
+    switch (el.type) {
+      case 'checkbox':
+        el.checked = value;
+        break;
+
+      case 'range':
+        el.value = value;
+
+        break;
+    }
   }, this);
 };
 
@@ -45,8 +56,20 @@ SettingsHandler.prototype.handleEvent = function(evt) {
     return;
   }
 
-  var key = evt.target.dataset.settingId;
-  var value = evt.target.checked;
+  var el = evt.target;
+  var key = el.dataset.settingId;
+  var value;
+  switch (el.type) {
+    case 'checkbox':
+      value = el.checked;
+
+      break;
+
+    case 'range':
+      value = el.valueAsNumber;
+
+      break;
+  }
   this.settings.set(key, value);
 
   this.app.postMessage({
