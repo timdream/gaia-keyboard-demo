@@ -47,7 +47,8 @@ ConfigDialog.prototype.hide = function() {
   window.requestAnimationFrame(this.app.getFocus.bind(this.app));
 };
 
-var KeyboardDemoApp = function() {
+var KeyboardDemoApp = function(layouts) {
+  this.layouts = layouts;
   this.container = null;
 };
 
