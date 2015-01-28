@@ -43,6 +43,10 @@ KeyboardAppStarter.prototype._startAPI = function() {
     window.AudioContext = window.webkitAudioContext;
   }
 
+  if (!window.OfflineAudioContext && window.AudioContext) {
+    window.OfflineAudioContext = window.AudioContext;
+  }
+
   if (!('vibrate' in navigator)) {
     navigator.vibrate = function() { };
   };
@@ -53,6 +57,18 @@ KeyboardAppStarter.prototype._startAPI = function() {
       },
       now: function() { }
     };
+  }
+
+  if (!('flex' in document.body.style) &&
+      ('webkitFlex' in document.body.style)) {
+    Object.defineProperty(CSSStyleDeclaration.prototype, 'flex', {
+      get: function() {
+        return this.webkitFlex;
+      },
+      set: function(val) {
+        return (this.webkitFlex = val);
+      }
+    })
   }
 
   if (!exports.WeakMap) {
@@ -145,12 +161,14 @@ KeyboardAppStarter.prototype._prepareDOM = function(sourceDoc) {
     sourceDoc.documentElement.firstElementChild, true);
   var sourceBodyNode = document.importNode(sourceDoc.body, true);
 
+  // These appendChild() are already wrapped with cache busting.
+
   ['../../../assets/api.css'].forEach(function(url) {
-      var el = document.createElement('link');
-      el.href = url;
-      el.rel = 'stylesheet';
-      destHeadNode.appendChild(el);
-    });
+    var el = document.createElement('link');
+    el.href = url;
+    el.rel = 'stylesheet';
+    destHeadNode.appendChild(el);
+  }, this);
 
   Array.prototype.forEach.call(sourceHeadNode.children, function(node, i) {
     if (node.nodeName === 'SCRIPT') {
@@ -170,6 +188,13 @@ KeyboardAppStarter.prototype._prepareDOM = function(sourceDoc) {
     // clone the node so we don't mess with the original collection list.
     document.body.appendChild(node.cloneNode(true));
   });
+
+  // Insert -prefix-free to get <style> prefixed.
+  var el = document.createElement('script');
+  el.src =
+    '//cdnjs.cloudflare.com/ajax/libs/prefixfree/1.0.7/prefixfree.min.js';
+  el.async = false;
+  destHeadNode.appendChild(el);
 };
 
 exports.KeyboardAppStarter = KeyboardAppStarter;

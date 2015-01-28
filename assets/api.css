@@ -9,11 +9,12 @@ html {
   -webkit-tap-highlight-color: transparent;
 }
 
-#keyboard-accent-char-menu {
-  /* Special hack to make the keys in the menu flow upwards. */
-  -webkit-transform: rotateX(180deg);
+/* WebKit requires flex=1 to be explicitly declared,
+   as opposed to standard flexbox behavior */
+.keyboard-key {
+  -webkit-flex: 1 1 0px;
 }
 
-#keyboard-accent-char-menu .keyboard-key {
-  -webkit-transform: rotateX(180deg);
+.suggestions-container > * {
+  -webkit-flex: 1 1 0px;
 }
