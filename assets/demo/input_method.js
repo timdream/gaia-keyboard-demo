@@ -48,7 +48,29 @@ InputMethodHandler.prototype.handleInputContextMessage = function(data) {
 
       break;
 
+    case 'keydown':
     case 'sendKey':
+      if (typeof data.args[0] === 'object') {
+        switch (data.args[0].key) {
+          case 'Backspace':
+            this._handleInput('backspace');
+
+            break;
+
+          case 'Enter':
+            this._handleInput('return');
+
+            break;
+
+          default:
+            this._handleInput('append', data.args[0].key);
+
+            break;
+        }
+      } else if (data.method === 'keydown') {
+        // keydown does not support old methods
+        break;
+      }
       var charCode = data.args[1];
       if (charCode) {
         this._handleInput('append', String.fromCharCode(data.args[1]));
@@ -80,6 +102,10 @@ InputMethodHandler.prototype.handleInputContextMessage = function(data) {
         result: ''
       });
 
+      break;
+
+    case 'keyup':
+      // nothing to do since we don't emit events.
       break;
 
     case 'replaceSurroundingText':
@@ -217,8 +243,14 @@ InputMethodHandler.prototype._handleInput = function(job, str, offset, length) {
       break;
 
     case 'backspace':
+      var length = 1;
+      var lastCharCode =
+        this._currentText.charCodeAt(this._currentText.length - 1);
+      if (0xd800 <= lastCharCode && lastCharCode <= 0xdfff ) {
+        length = 2;
+      }
       this._currentText =
-        this._currentText.substr(0, this._currentText.length - 1);
+        this._currentText.substr(0, this._currentText.length - length);
 
       window.requestAnimationFrame(function() {
         if ((lastChild.nodeName !== '#text' ||
@@ -227,7 +259,7 @@ InputMethodHandler.prototype._handleInput = function(job, str, offset, length) {
           container.removeChild(lastChild);
         } else {
           lastChild.textContent = lastChild.textContent
-            .substr(0, lastChild.textContent.length - 1)
+            .substr(0, lastChild.textContent.length - length)
             .replace(/ /g, String.fromCharCode(0xA0))
             .replace(/\xA0(\S)/g, function(m0, m1) { return ' ' + m1; });
         }
