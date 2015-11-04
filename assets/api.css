@@ -18,3 +18,37 @@ html {
 .suggestions-container > * {
   -webkit-flex: 1 1 0px;
 }
+
+/* No CSS variable :'( */
+
+.keyboard-key > .visual-wrapper {
+  height: 4.5rem;
+}
+
+.keyboard-key > .visual-wrapper > .key-element {
+  line-height: 4.5rem;
+}
+
+.rows-5 .keyboard-key > .visual-wrapper {
+  height: 3.4rem;
+}
+
+.rows-5 .keyboard-key > .visual-wrapper > .key-element {
+  line-height: 3.4rem;
+}
+
+.landscape .keyboard-key > .visual-wrapper {
+  height: 3.8rem;
+}
+
+.landscape .keyboard-key > .visual-wrapper > .key-element {
+  line-height: 3.8rem;
+}
+
+.landscape .rows-5 .keyboard-key > .visual-wrapper {
+  height: 2.85rem;
+}
+
+.landscape .rows-5 .keyboard-key > .visual-wrapper > .key-element {
+  line-height: 2.85rem;
+}

@@ -10,7 +10,7 @@ var KeyboardAppStarter = function() {
 // We therefore employ cache busting here by replacing the native appendChild
 // methods under <head> and <body>.
 // This hash is the Gaia commit hash included in submodule.
-KeyboardAppStarter.prototype.CACHE_BUSTING_HASH = '33a5e04';
+KeyboardAppStarter.prototype.CACHE_BUSTING_HASH = '47da49f';
 
 KeyboardAppStarter.prototype.start = function() {
   window.history.replaceState(null, '', window.location.hash.substr(1));
@@ -40,10 +40,16 @@ KeyboardAppStarter.prototype._startAPI = function() {
   };
 
   if (!window.AudioContext && window.webkitAudioContext) {
-    window.AudioContext = window.webkitAudioContext;
+    // WebKit throws when we do |new AudioContext('system')|.
+    // It must called with 0 arguments.
+    window.AudioContext = function AudioContext() {
+      return new window.webkitAudioContext();
+    };
   }
 
-  if (!window.OfflineAudioContext && window.AudioContext) {
+  if (!window.OfflineAudioContext && window.webkitOfflineAudioContext) {
+    window.OfflineAudioContext = window.webkitOfflineAudioContext;
+  } else if (!window.OfflineAudioContext) {
     window.OfflineAudioContext = window.AudioContext;
   }
 
