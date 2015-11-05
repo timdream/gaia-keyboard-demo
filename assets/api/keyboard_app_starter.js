@@ -40,10 +40,14 @@ KeyboardAppStarter.prototype._startAPI = function() {
   };
 
   if (!window.AudioContext && window.webkitAudioContext) {
+    var cachedAudioContextInstance;
     // WebKit throws when we do |new AudioContext('system')|.
     // It must called with 0 arguments.
     window.AudioContext = function AudioContext() {
-      return new window.webkitAudioContext();
+      if (!cachedAudioContextInstance) {
+        cachedAudioContextInstance = new window.webkitAudioContext();
+      }
+      return cachedAudioContextInstance;
     };
   }
 
