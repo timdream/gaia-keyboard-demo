@@ -10,7 +10,7 @@ var KeyboardAppStarter = function() {
 // We therefore employ cache busting here by replacing the native appendChild
 // methods under <head> and <body>.
 // This hash is the Gaia commit hash included in submodule.
-KeyboardAppStarter.prototype.CACHE_BUSTING_HASH = '47da49f';
+KeyboardAppStarter.prototype.CACHE_BUSTING_HASH = '8e8c142';
 
 KeyboardAppStarter.prototype.start = function() {
   window.history.replaceState(null, '', window.location.hash.substr(1));
