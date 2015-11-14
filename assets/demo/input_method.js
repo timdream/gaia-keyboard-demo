@@ -244,10 +244,23 @@ InputMethodHandler.prototype._handleInput = function(job, str, offset, length) {
 
     case 'backspace':
       var length = 1;
-      var lastCharCode =
-        this._currentText.charCodeAt(this._currentText.length - 1);
-      if (0xd800 <= lastCharCode && lastCharCode <= 0xdfff ) {
-        length = 2;
+      var lastCharCode;
+      while (true) {
+        lastCharCode =
+          this._currentText.charCodeAt(this._currentText.length - length);
+        // Surrogates 0xd800 - 0xdfff
+        if (lastCharCode >> 11 === 0x1b) {
+          length += 1;
+          break;
+        }
+
+        // Variation selectors 0xfe00 - 0xfe0f
+        if (lastCharCode >> 4 === 0xfe0) {
+          length += 1;
+          continue;
+        }
+
+        break;
       }
       this._currentText =
         this._currentText.substr(0, this._currentText.length - length);
