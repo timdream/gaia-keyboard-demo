@@ -67,10 +67,12 @@ InputMethodHandler.prototype.handleInputContextMessage = function(data) {
 
             break;
         }
+        break;
       } else if (data.method === 'keydown') {
         // keydown does not support old methods
         break;
       }
+
       var charCode = data.args[1];
       if (charCode) {
         this._handleInput('append', String.fromCharCode(data.args[1]));
