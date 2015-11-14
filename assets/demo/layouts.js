@@ -84,7 +84,7 @@ var KeyboardLayouts = function(app) {
     and IMEngine provided. */
   this.enabledLayouts =
     ['en', 'el', 'es', 'fr', 'ko', 'vi-Typewriter', 'zh-Hans-Pinyin',
-      'zh-Hant-Zhuyin', 'bn-Avro', 'ru', 'ar', 'he', 'ta'].sort();
+      'zh-Hant-Zhuyin', 'bn-Avro', 'ru', 'ar', 'he', 'ta', 'emoji'].sort();
 
   this.currentLayout = undefined;
 
