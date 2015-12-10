@@ -4,6 +4,15 @@
 
 (function(exports) {
 
+  var Deferred = function() {
+    this.promise = new Promise(function(resolve, reject) {
+      this.resolve = resolve;
+      this.reject = reject;
+    }.bind(this));
+
+    return this;
+  };
+
   /**
    * InputMethod is a constructer function that will give you an mock
    * instance of `navigator.mozInputMethod`. For the real implementation, see
@@ -172,30 +181,21 @@
       return;
     }
 
-    var p = this._pendingPromises.get(data.id);
+    var d = this._pendingPromises.get(data.id);
     this._pendingPromises.delete(data.id);
 
     if (typeof data.result !== 'undefined') {
-      p._resolve(data.result);
+      d.resolve(data.result);
     } else {
-      p._reject(data.error);
+      d.reject(data.error);
     }
   };
 
   InputContext.prototype._sendMessage = function(method, args) {
-    var oResolve, oReject;
-    // We are using the native Promise here but expose
-    // the reject method and a resolve method.
-    // See http://mdn.io/promise
-    var p = new Promise(function(resolve, reject) {
-      oResolve = resolve;
-      oReject = reject;
-    });
-    p._resolve = oResolve;
-    p._reject = oReject;
+    var d = new Deferred();
 
     var promiseId = ++this._pendingPromisesId;
-    this._pendingPromises.set(promiseId, p);
+    this._pendingPromises.set(promiseId, d);
 
     window.addEventListener('message', this);
     window.parent.postMessage({
@@ -206,7 +206,7 @@
       args: args
     } , '*');
 
-    return p;
+    return d.promise;
   };
 
   InputContext.prototype._updateSelectionContext = function(ctx, ownAction) {
