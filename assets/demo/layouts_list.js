@@ -32,6 +32,7 @@ LAYOUTS.set('eo', 'Esperanto');
 LAYOUTS.set('es-Americas', 'Español (Latinoamérica)');
 LAYOUTS.set('es', 'Español');
 LAYOUTS.set('eu', 'Euskara');
+LAYOUTS.set('fa', 'فارسی');
 LAYOUTS.set('ff', 'Pulaar-Fulfulde');
 LAYOUTS.set('fr-CA', 'Français (Canadien)');
 LAYOUTS.set('fr-CH', 'Français (Suisse)');
