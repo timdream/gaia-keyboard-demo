@@ -67,31 +67,37 @@ InputMethodHandler.prototype.handleInputContextMessage = function(data) {
 
             break;
         }
-        break;
-      } else if (data.method === 'keydown') {
+      } else { // old arguments
         // keydown does not support old methods
-        break;
-      }
+        if (data.method === 'keydown') {
+          this.app.postMessage({
+            api: data.api,
+            contextId: data.contextId,
+            id: data.id,
+            error: 'Wrong arguments.'
+          });
+          break;
+        }
+        var charCode = data.args[1];
+        if (charCode) {
+          this._handleInput('append', String.fromCharCode(data.args[1]));
+        } else {
+          switch (data.args[0]) {
+            case 0x08: // DOM_VK_BACKSPACE
+              this._handleInput('backspace');
 
-      var charCode = data.args[1];
-      if (charCode) {
-        this._handleInput('append', String.fromCharCode(data.args[1]));
-      } else {
-        switch (data.args[0]) {
-          case 0x08: // DOM_VK_BACKSPACE
-            this._handleInput('backspace');
+              break;
 
-            break;
+            case 0x0D: // DOM_VK_RETURN
+              this._handleInput('return');
 
-          case 0x0D: // DOM_VK_RETURN
-            this._handleInput('return');
+              break;
 
-            break;
+            default:
+              console.log(data.args[0]);
 
-          default:
-            console.log(data.args[0]);
-
-            break;
+              break;
+          }
         }
       }
 
@@ -103,7 +109,6 @@ InputMethodHandler.prototype.handleInputContextMessage = function(data) {
         id: data.id,
         result: ''
       });
-
       break;
 
     case 'keyup':
