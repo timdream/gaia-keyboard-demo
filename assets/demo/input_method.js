@@ -13,11 +13,48 @@ var InputMethodHandler = function(app) {
 InputMethodHandler.prototype.INPUT_ELEMENT_ID = 'inputtext';
 InputMethodHandler.prototype.COMPOSITION_ELEMENT_ID = 'composition';
 
-InputMethodHandler.prototype.start = function() {
-  this.input = document.getElementById(this.INPUT_ELEMENT_ID);
+InputMethodHandler.prototype.start = function(elements) {
+  elements = elements || {};
+  this.input =
+    elements.input ||
+    document.getElementById(this.INPUT_ELEMENT_ID);
   this.input.appendChild(document.createTextNode(''));
 
-  this.composition = document.getElementById(this.COMPOSITION_ELEMENT_ID);
+  this.composition =
+    elements.composition ||
+    document.getElementById(this.COMPOSITION_ELEMENT_ID);
+};
+
+InputMethodHandler.prototype.stop = function() {
+  this.input = null;
+  this.composition = null;
+};
+
+InputMethodHandler.prototype.getCurrentText = function() {
+  return this._currentText;
+};
+
+InputMethodHandler.prototype.setCurrentText = function(text) {
+  this._currentText = text;
+  this.input.textContent = '';
+
+  if (!text) {
+    this.input.appendChild(document.createTextNode(''));
+  } else {
+    text.split('\n').forEach(function(paragraph, i, arr) {
+      // The witchcraft is needed because we need to use nbsp to prevent
+      // space from collapsing, but the same time we want word breaks if
+      // needed.
+      //
+      // XXX: This is not the most efficient way to do it.
+      paragraph = paragraph.replace(/ /g, String.fromCharCode(0xA0))
+        .replace(/\xA0(\S)/g, function(m0, m1) { return ' ' + m1; });
+      this.input.appendChild(document.createTextNode(paragraph));
+      if ((i + 1) !== arr.length) {
+        this.input.appendChild(document.createElement('br'));
+      }
+    }.bind(this));
+  }
 };
 
 InputMethodHandler.prototype.handleMessage = function(data) {
@@ -187,12 +224,12 @@ InputMethodHandler.prototype.handleInputContextMessage = function(data) {
 InputMethodHandler.prototype.handleInputMethodManagerMessage = function(data) {
   switch (data.method) {
     case 'showAll':
-      this.app.layouts.showSelectionDialog();
+      this.app.showSelectionDialog();
 
       break;
 
     case 'next':
-      this.app.layouts.switchToNext();
+      this.app.switchToNext();
 
       break;
 

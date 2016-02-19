@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en-US">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Gaia Keyboard Embedded</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <link rel="icon" type="image/png" sizes="460x460" href="./assets/mozilla-b2g.png" />
+  <link rel="apple-touch-icon" href="./assets/mozilla-b2g.png" />
+  <style>
+  body, input, textarea {
+    font-family: sans-serif;
+  }
+
+  input, textarea {
+    font-size: 1.2em;
+    width: 80%;
+  }
+  </style>
+
+  <!-- ES6 interface shim, for old browsers like Mobile Safari -->
+  <script>
+  if (!window.Map || !window.Promise || !window.WeakMap || !Object.assign) {
+    document.write(
+      '<script defer src="//cdnjs.cloudflare.com/ajax/libs/es6-shim/0.11.0/es6-shim.min.js"><' + '/script>');
+  }
+  </script>
+
+  <!--
+  Files to include for embedding Gaia Keyboard on websites.
+  XXX: This is way too many scripts and should be concatenated and minified
+       into one script.
+  -->
+  <link rel="stylesheet" href="lib/gaia_keyboard.css">
+  <script src="./assets/demo/layouts_list.js"></script>
+  <script src="./assets/demo/settings.js"></script>
+  <script src="./assets/demo/input_method.js"></script>
+  <script src="./lib/gaia_keyboard.js"></script>
+
+  <script type="text/javascript">
+
+  // This is changed in our test page here we could test the script locally.
+  // Without overwriting this property, script will attempt to load
+  // the app frame from my domain hostd on GitHub, which consumes less bandwidth
+  // for you but you might be in risk of version mismatch between library and
+  // the app frame, and maybe loading failure.
+  GaiaKeyboard.prototype.ASSET_ROOT_URL = './';
+
+  // Only starts the library when the DOM is ready.
+  window.onload = function() {
+    window.onload = null;
+
+    // Minimal code needed to start the library on below:
+
+    var keyboard = new GaiaKeyboard({
+      startInputLayoutId: 'en'
+      // Set this property to all access only these layouts.
+      // enabledLayouts: ['en', 'es', ...]
+      // Set this to append DOM to somewhere other than <body>
+      // It has to be a visible element.
+      // parentELement:
+    });
+
+    // Start the expensive part (loading the DOM and iframe etc.),
+    // preferable only call this when use opt-in to the touch keyboard.
+    keyboard.start();
+  };
+  </script>
+
+</head>
+<body>
+  <p>A fake form is provided here so that you could test the Gaia Keyboard library.</p>
+  <p><label>Name: <br/><input type="text" title="Name"></label></p>
+  <p><label>E-mail: <br/><input type="email" title="E-mail"></label></p>
+  <p><label>Comment: <br/><textarea title="Comment" id="textinput" rows="6" cols="30"></textarea></p>
+  <p><label>Longer Comment: <br/><textarea title="Longer comment" id="textinput" rows="12" cols="30"></textarea></p>
+</body>
+</html>

@@ -62,6 +62,9 @@ KeyboardDemoApp.prototype.start = function() {
   this.settingsHandler = new SettingsHandler(this);
   this.settingsHandler.start();
 
+  this.settingsUI = new SettingsUI(this);
+  this.settingsUI.start(this.settingsHandler.settings);
+
   this.inputMethodHandler = new InputMethodHandler(this);
   this.inputMethodHandler.start();
 
@@ -129,6 +132,14 @@ KeyboardDemoApp.prototype.removeFocus = function() {
     this.container.classList.add('transitioned-out');
     this.inputarea.classList.remove('focused');
   }.bind(this));
+};
+
+KeyboardDemoApp.prototype.showSelectionDialog = function() {
+  this.layouts.showSelectionDialog();
+};
+
+KeyboardDemoApp.prototype.switchToNext = function() {
+  this.layouts.switchToNext();
 };
 
 KeyboardDemoApp.prototype.postMessage = function(data) {

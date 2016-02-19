@@ -1,6 +1,8 @@
 # Gaia Keyboard Demo
 
-This is a off-work fun project to bring the built-in keyboard of [Mozilla Firefox OS](https://mozilla.org/firefoxos/) to the web, and make available on any device. 
+This is a off-work fun project to bring the built-in keyboard of [Mozilla Firefox OS](https://mozilla.org/firefoxos/) to the web, and make available on any device.
+
+It is also available as a drop-in library for multi-lingual websites. Try [the library test](http://timdream.org/gaia-keyboard-demo/lib.html) and read it's source code to find out how.
 
 ## Getting Started
 
