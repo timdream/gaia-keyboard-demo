@@ -73,18 +73,6 @@ InputMethodHandler.prototype.handleMessage = function(data) {
 
 InputMethodHandler.prototype.handleInputContextMessage = function(data) {
   switch (data.method) {
-    case 'getText':
-      var text = this._currentText;
-
-      this.app.postMessage({
-        api: data.api,
-        contextId: data.contextId,
-        id: data.id,
-        result: text
-      });
-
-      break;
-
     case 'keydown':
     case 'sendKey':
       if (typeof data.args[0] === 'object') {
@@ -370,8 +358,9 @@ InputMethodHandler.prototype.getSelectionInfo = function() {
     selectionEnd: selectionStart,
     textBeforeCursor: text,
     textAfterCursor: '',
-    changed: changed
-  }
+    changed: changed,
+    text: text
+  };
 };
 
 InputMethodHandler.prototype._updateSelectionContext = function() {

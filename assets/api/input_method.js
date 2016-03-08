@@ -141,6 +141,7 @@
   InputContext.prototype.selectionEnd = 0;
   InputContext.prototype.textBeforeCursor = '';
   InputContext.prototype.textAfterCursor = '';
+  InputContext.prototype.text = '';
 
   InputContext.prototype.onsurroundingtextchange = null;
 
@@ -219,6 +220,7 @@
     this.selectionEnd = ctx.selectionEnd;
     this.textBeforeCursor = ctx.textBeforeCursor;
     this.textAfterCursor = ctx.textAfterCursor;
+    this.text = ctx.text;
 
     if (selectionDirty) {
       this.fireSelectionChange(ownAction);
